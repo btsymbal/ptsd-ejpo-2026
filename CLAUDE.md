@@ -43,3 +43,20 @@ df.head()
 - Visualization and reporting
 
 **Never create .ipynb files** unless explicitly requested otherwise.
+
+## Python Environment
+
+**IMPORTANT**: When running Python scripts or notebooks in this repository, always use the **jupyter_env** conda environment.
+
+### Running Python Scripts
+
+Use the full path to the Python interpreter:
+```bash
+/opt/anaconda3/envs/jupyter_env/bin/python script_name.py
+```
+
+### Why This Matters
+
+- The `jupyter_env` environment contains all required dependencies (pandas, numpy, matplotlib, etc.)
+- Using the system Python or wrong environment will result in missing packages or version conflicts
+- All data analysis and preprocessing scripts depend on this environment
