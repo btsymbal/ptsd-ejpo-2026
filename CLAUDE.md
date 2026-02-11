@@ -61,6 +61,38 @@ Use the full path to the Python interpreter:
 - Using the system Python or wrong environment will result in missing packages or version conflicts
 - All data analysis and preprocessing scripts depend on this environment
 
+### File Paths in Python Scripts
+
+**CRITICAL**: Scripts are executed from the **project root directory**, not from their own location.
+
+#### Path Rules
+
+1. **Always use paths relative to project root**:
+   ```python
+   # ✅ CORRECT - Scripts in preprocessing/ are run from root
+   df = pd.read_csv('data/simplified/dataset_2_15.csv')
+   df.to_csv('data/simplified/output.csv')
+
+   # ❌ INCORRECT - Don't use ../ paths
+   df = pd.read_csv('../data/simplified/dataset_2_15.csv')
+   ```
+
+2. **Execution context**:
+   - Working directory during execution: `/Users/bohdantsymbal/Documents/anima/ptsd_clean`
+   - Script location: `preprocessing/script_name.py`
+   - Files are accessed relative to working directory, not script location
+
+3. **Common locations**:
+   - Input data: `data/simplified/`, `data/additional/`, `materials/`
+   - Output data: `data/simplified/`
+   - Scripts: `preprocessing/`
+
+#### Why This Matters
+
+- Using `../` paths will cause `FileNotFoundError` when scripts are run from project root
+- All existing notebooks follow this pattern (check `preprocess_ptsd_table.py`, `identify_antipsychotics.py`)
+- Consistent path usage ensures scripts can be run from any tool (terminal, IDE, Jupyter)
+
 ## Git Operations
 
 **IMPORTANT**: Before attempting to stage files with `git add`, always check if they are excluded by `.gitignore`.
