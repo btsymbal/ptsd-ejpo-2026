@@ -5,15 +5,21 @@
 # to identify which columns are present in one dataset but missing in the other.
 
 # %%
+import os
+from pathlib import Path
+
 import pandas as pd
+
+# Set working directory to project root (works from any location)
+os.chdir(Path(__file__).resolve().parent.parent)
 
 # %% [markdown]
 # ## Load Datasets
 
 # %%
 # Load both datasets
-df1 = pd.read_csv('../data/simplified/dataset_1_15.csv')
-df2 = pd.read_csv('../data/simplified/dataset_2_15.csv')
+df1 = pd.read_csv('data/simplified/dataset_1_15.csv')
+df2 = pd.read_csv('data/simplified/dataset_2_15.csv')
 
 print(f"Dataset 1 shape: {df1.shape}")
 print(f"Dataset 2 shape: {df2.shape}")

@@ -14,7 +14,13 @@
 # - Export merged dataset with 15 rows × 191 columns
 
 # %%
+import os
+from pathlib import Path
+
 import pandas as pd
+
+# Set working directory to project root (works from any location)
+os.chdir(Path(__file__).resolve().parent.parent)
 
 # %% [markdown]
 # ## Load Datasets

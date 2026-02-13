@@ -63,35 +63,46 @@ Use the full path to the Python interpreter:
 
 ### File Paths in Python Scripts
 
-**CRITICAL**: Scripts are executed from the **project root directory**, not from their own location.
+**CRITICAL**: Every script must include a project-root resolution block in its **imports cell** so that it works regardless of where it is executed from.
+
+#### Project-Root Pattern (required in every script)
+
+Every script's imports cell must start with:
+
+```python
+import os
+from pathlib import Path
+
+# Set working directory to project root (works from any location)
+os.chdir(Path(__file__).resolve().parent.parent)
+```
+
+- `__file__` resolves to the script's own path regardless of the caller's working directory
+- `.parent.parent` walks up from e.g. `preprocessing/script.py` to the project root
+- After `os.chdir`, all relative paths like `data/simplified/...` resolve correctly
 
 #### Path Rules
 
-1. **Always use paths relative to project root**:
+1. **Always use root-relative paths** (after the `os.chdir` block above):
    ```python
-   # ✅ CORRECT - Scripts in preprocessing/ are run from root
+   # ✅ CORRECT
    df = pd.read_csv('data/simplified/dataset_2_15.csv')
    df.to_csv('data/simplified/output.csv')
 
-   # ❌ INCORRECT - Don't use ../ paths
+   # ❌ INCORRECT - Never use ../ paths
    df = pd.read_csv('../data/simplified/dataset_2_15.csv')
    ```
 
-2. **Execution context**:
-   - Working directory during execution: `/Users/bohdantsymbal/Documents/anima/ptsd_clean`
-   - Script location: `preprocessing/script_name.py`
-   - Files are accessed relative to working directory, not script location
-
-3. **Common locations**:
+2. **Common locations**:
    - Input data: `data/simplified/`, `data/additional/`, `materials/`
    - Output data: `data/simplified/`
-   - Scripts: `preprocessing/`
+   - Scripts: `preprocessing/`, `routine_exploration/`
 
 #### Why This Matters
 
-- Using `../` paths will cause `FileNotFoundError` when scripts are run from project root
-- All existing notebooks follow this pattern (check `preprocess_ptsd_table.py`, `identify_antipsychotics.py`)
-- Consistent path usage ensures scripts can be run from any tool (terminal, IDE, Jupyter)
+- The `os.chdir` block ensures scripts work when run from project root **and** from the script's own directory
+- Without it, root-relative paths break when running `cd preprocessing && python script.py`
+- All existing scripts follow this pattern
 
 ## Git Operations
 

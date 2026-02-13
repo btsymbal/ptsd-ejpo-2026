@@ -14,15 +14,21 @@
 #   Substance abuse, Psychiatric history, Battle injuries, Comments)
 
 # %%
+import os
+from pathlib import Path
+
 import pandas as pd
 import re
+
+# Set working directory to project root (works from any location)
+os.chdir(Path(__file__).resolve().parent.parent)
 
 # %% [markdown]
 # ## Load Data
 
 # %%
 # Load Excel file
-df = pd.read_excel('../materials/PTSD_Anima_Table_05_08.xlsx')
+df = pd.read_excel('materials/PTSD_Anima_Table_05_08.xlsx')
 
 # Display original shape
 print(f"Original shape: {df.shape}")
@@ -147,7 +153,7 @@ df.head()
 # ## Export to CSV
 
 # %%
-output_path = '../data/additional/PTSD_Anima_Table_05_08_preprocessed.csv'
+output_path = 'data/additional/PTSD_Anima_Table_05_08_preprocessed.csv'
 df.to_csv(output_path, index=False)
 print(f"Data exported to: {output_path}")
 print(f"Final dataset shape: {df.shape}")

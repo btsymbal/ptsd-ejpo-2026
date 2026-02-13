@@ -15,16 +15,22 @@
 # - Export processed dataset
 
 # %%
+import os
+from pathlib import Path
+
 import pandas as pd
 import re
 from typing import Dict, Tuple
+
+# Set working directory to project root (works from any location)
+os.chdir(Path(__file__).resolve().parent.parent)
 
 # %% [markdown]
 # ## Load Data
 
 # %%
 # Load preprocessed CSV
-df = pd.read_csv('../data/additional/PTSD_Anima_Table_05_08_preprocessed.csv')
+df = pd.read_csv('data/additional/PTSD_Anima_Table_05_08_preprocessed.csv')
 
 # Display original shape
 print(f"Original shape: {df.shape}")
@@ -335,7 +341,7 @@ df_final.head()
 # ## Export Processed Dataset
 
 # %%
-output_path = '../data/additional/PTSD_Anima_Table_05_08_with_antipsychotic.csv'
+output_path = 'data/additional/PTSD_Anima_Table_05_08_with_antipsychotic.csv'
 df_final.to_csv(output_path, index=False)
 print(f"\nData exported to: {output_path}")
 print(f"Final dataset shape: {df_final.shape}")

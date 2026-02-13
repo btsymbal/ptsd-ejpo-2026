@@ -15,8 +15,14 @@
 # **Output**: `dataset_merged_1_and_2_15.csv` (30 rows × 191 columns)
 
 # %%
+import os
+from pathlib import Path
+
 import pandas as pd
 import numpy as np
+
+# Set working directory to project root (works from any location)
+os.chdir(Path(__file__).resolve().parent.parent)
 
 # %% [markdown]
 # ## 1. Load Datasets
