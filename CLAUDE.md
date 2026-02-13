@@ -96,6 +96,7 @@ os.chdir(Path(__file__).resolve().parent.parent)
 2. **Common locations**:
    - Input data: `data/simplified/`, `data/additional/`, `materials/`
    - Output data: `data/simplified/`
+   - Figures: `figures/` (with subdirectories per notebook/topic)
    - Scripts: `preprocessing/`, `routine_exploration/`
 
 #### Why This Matters
@@ -103,6 +104,19 @@ os.chdir(Path(__file__).resolve().parent.parent)
 - The `os.chdir` block ensures scripts work when run from project root **and** from the script's own directory
 - Without it, root-relative paths break when running `cd preprocessing && python script.py`
 - All existing scripts follow this pattern
+
+## Figures
+
+**IMPORTANT**: All notebook-generated figures must be saved to the `figures/` directory at the project root.
+
+### Rules
+
+1. **Save location**: `figures/<topic_subdirectory>/filename.png`
+   - Create a subdirectory named after the notebook or analysis topic
+   - Example: `figures/valid_gaze_proportion/poor_slides_histogram.png`
+2. **Format**: Use PNG at 600 dpi unless otherwise specified
+3. **Create subdirectory in code**: Use `os.makedirs('figures/<subdir>', exist_ok=True)`
+4. **Never save figures** to `data/output/` or alongside scripts
 
 ## Git Operations
 
