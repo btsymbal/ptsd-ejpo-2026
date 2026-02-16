@@ -64,6 +64,11 @@ print(f'PTSD group: {(merged["if_PTSD"] == 1).sum()}')
 print(f'No-PTSD group: {(merged["if_PTSD"] == 0).sum()}')
 print(f'\nPer-slide rows: {len(all_slides_df)}')
 
+# %%
+os.makedirs('data/output/valid_gaze_proportion/merged', exist_ok=True)
+merged.to_csv('data/output/valid_gaze_proportion/merged/valid_gaze_ptsd_merged.csv', index=False)
+print('Saved: data/output/valid_gaze_proportion/merged/valid_gaze_ptsd_merged.csv')
+
 # %% [markdown]
 # ## Analysis 1: Group Comparison (PTSD vs No-PTSD)
 
