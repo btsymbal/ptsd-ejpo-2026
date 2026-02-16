@@ -109,6 +109,12 @@ else:
 # Flag sessions where fewer than 60% of slides meet the 50% valid gaze threshold.
 
 # %%
+metadata = pd.read_csv(
+    'data/simplified/dataset_merged_1_and_2.csv',
+    usecols=['sessions', 'if_PTSD', 'ITI_PTSD']
+)
+
+# %%
 total_slides = 75
 threshold_pct = 0.60
 
@@ -134,11 +140,50 @@ print(f"Sessions where <{threshold_pct:.0%} of slides have valid gaze >=50%: "
 
 if len(failing) > 0:
     for _, row in failing.iterrows():
-        print(f"  {row['session_id']}  "
+        sid = row['session_id']
+        meta_row = metadata[metadata['sessions'] == sid]
+        if len(meta_row) > 0:
+            ptsd = int(meta_row['if_PTSD'].iloc[0])
+            iti = meta_row['ITI_PTSD'].iloc[0]
+            ptsd_info = f"  PTSD={ptsd}, ITI={iti}"
+        else:
+            ptsd_info = "  (no metadata)"
+        print(f"  {sid}  "
               f"{int(row['good_slides'])}/{total_slides} good slides "
-              f"({row['good_slides_pct']:.1%})")
+              f"({row['good_slides_pct']:.1%}){ptsd_info}")
 else:
     print("  (none)")
+
+# %% [markdown]
+# ### Scatter Plots: Slide-by-Slide Valid Gaze for Failing Sessions
+
+# %%
+if len(failing) > 0:
+    for _, row in failing.iterrows():
+        sid = row['session_id']
+        sdf = pd.read_csv(os.path.join(out_dir, f'{sid}.csv'))
+        sdf = sdf.sort_values('slide_number')
+
+        meta_row = metadata[metadata['sessions'] == sid]
+        if len(meta_row) > 0:
+            ptsd = int(meta_row['if_PTSD'].iloc[0])
+            iti = meta_row['ITI_PTSD'].iloc[0]
+            title_suffix = f' (PTSD={ptsd}, ITI={iti})'
+        else:
+            title_suffix = ''
+
+        fig, ax = plt.subplots(figsize=(10, 4))
+        ax.scatter(sdf['slide_number'], sdf['valid_gaze_proportion'], s=20)
+        ax.axhline(0.5, color='red', linestyle='--', linewidth=1, label='50% threshold')
+        ax.set_xlabel('Slide number')
+        ax.set_ylabel('Valid gaze proportion')
+        ax.set_title(f'{sid} — valid gaze proportion per slide{title_suffix}')
+        ax.legend()
+        fig.tight_layout()
+        out_path = f'figures/valid_gaze_proportion/{sid}_slide_dynamics.png'
+        fig.savefig(out_path, dpi=600)
+        plt.close(fig)
+        print(f"Saved {out_path}")
 
 # %% [markdown]
 # ## Histogram: Number of Slides with < 50% Valid Gaze per Session
