@@ -201,3 +201,86 @@ fig.tight_layout()
 fig.savefig('figures/valid_gaze_proportion/poor_slides_histogram.png', dpi=600)
 plt.show()
 print("Saved to figures/valid_gaze_proportion/poor_slides_histogram.png")
+
+# %% [markdown]
+# ## Usable Trials per Image Category
+
+# %%
+import json
+
+with open('materials/image_pair_ids.json') as f:
+    image_pair_ids = json.load(f)
+
+with open('materials/id_to_category_mapping.json') as f:
+    id_to_category = json.load(f)
+
+# Build slide -> set of categories
+slide_categories = {}
+for slide_str, img_ids in image_pair_ids.items():
+    cats = set()
+    for img_id in img_ids:
+        if img_id in id_to_category:
+            cats.add(id_to_category[img_id])
+    slide_categories[int(slide_str)] = cats
+
+all_categories = sorted({cat for cats in slide_categories.values() for cat in cats})
+print(f"Categories ({len(all_categories)}): {all_categories}")
+
+# %%
+from collections import defaultdict
+
+usable_dir = 'data/output/valid_gaze_proportion/usable_trials_per_category/'
+os.makedirs(usable_dir, exist_ok=True)
+
+session_category_counts = {}
+
+for filename in sorted(os.listdir(out_dir)):
+    if not filename.endswith('.csv'):
+        continue
+    session_id = filename.replace('.csv', '')
+    sdf = pd.read_csv(os.path.join(out_dir, filename))
+    good_slides = sdf[sdf['valid_gaze_proportion'] >= 0.5]['slide_number'].values
+
+    counts = defaultdict(int)
+    for slide_num in good_slides:
+        for cat in slide_categories.get(int(slide_num), set()):
+            counts[cat] += 1
+
+    session_category_counts[session_id] = dict(counts)
+
+rows = []
+for sid, counts in session_category_counts.items():
+    row = {'session_id': sid}
+    for cat in all_categories:
+        row[f'{cat}_usable_trials_cnt'] = counts.get(cat, 0)
+    rows.append(row)
+
+usable_df = pd.DataFrame(rows).sort_values('session_id').reset_index(drop=True)
+usable_df.to_csv(os.path.join(usable_dir, 'usable_trials_by_category.csv'), index=False)
+print(f"Saved usable trials by category: {usable_df.shape[0]} sessions × {usable_df.shape[1]} columns")
+print(f"  -> {os.path.join(usable_dir, 'usable_trials_by_category.csv')}")
+
+# %%
+total_trials_per_category = defaultdict(int)
+for cats in slide_categories.values():
+    for cat in cats:
+        total_trials_per_category[cat] += 1
+
+cat_cols = [c for c in usable_df.columns if c.endswith('_usable_trials_cnt')]
+mask = usable_df[cat_cols].lt(5).any(axis=1)
+flagged = usable_df[mask]
+
+print(f"Sessions with any category < 5 usable trials: {len(flagged)} / {len(usable_df)}\n")
+
+for _, row in flagged.iterrows():
+    bad = {col.replace('_usable_trials_cnt', ''): row[col]
+           for col in cat_cols if row[col] < 5}
+    meta_row = metadata[metadata['sessions'] == row['session_id']]
+    if not meta_row.empty:
+        ptsd = int(meta_row['if_PTSD'].iloc[0])
+        iti = meta_row['ITI_PTSD'].iloc[0]
+        print(f"  {row['session_id']} (PTSD={ptsd}, ITI={iti}):")
+    else:
+        print(f"  {row['session_id']}:")
+    for cat, cnt in sorted(bad.items()):
+        print(f"    {cat}: {int(cnt)} trials (of {total_trials_per_category[cat]})")
