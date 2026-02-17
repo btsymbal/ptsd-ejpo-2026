@@ -123,3 +123,17 @@ if len(outliers) > 0:
           .to_string(index=False, float_format='%.1f'))
 else:
     print("  (none)")
+
+# %% [markdown]
+# ## Section 4: Export Correct Slide Durations
+#
+# Save the expected duration for each slide (1–75) to a reusable CSV.
+
+# %%
+slide_durations = pd.DataFrame({
+    'slide_number': range(1, 76),
+    'expected_duration_ms': [1500 if s in slides_1500 else 2500 for s in range(1, 76)]
+})
+
+slide_durations.to_csv('materials/slide_durations.csv', index=False)
+print(f"Exported {len(slide_durations)} slide durations to materials/slide_durations.csv")
