@@ -4,7 +4,7 @@
 # Descriptive overview of all variables in the eye-tracking metrics dataset,
 # outlier flagging, distributional checks, and PTSD-group visual preview.
 #
-# **Input**: `data/simplified/dataset_eyetracking_metrics.csv` (30 sessions × 90 columns)
+# **Input**: `data/simplified/dataset_eyetracking_metrics.csv` (30 sessions × ~134 columns)
 
 # %%
 import os
@@ -47,28 +47,37 @@ print(nan_counts[nan_counts > 0].to_string() if nan_counts.any() else "  No NaN 
 # Define column groups
 meta_cols = ['session_id', 'if_PTSD', 'ITI_PTSD', 'ITI_cPTSD', 'if_antipsychotic']
 
-mean_dwell_cols = [c for c in df.columns if c.startswith('mean_dwell_pct_')]
+mean_dwell_cols = [c for c in df.columns if c.startswith('mean_dwell_pct_') and '_late_' not in c]
 std_dwell_cols = [c for c in df.columns if c.startswith('std_dwell_pct_')]
 std_delta_dwell_cols = [c for c in df.columns if c.startswith('std_delta_dwell_pct_')]
-mean_visits_cols = [c for c in df.columns if c.startswith('mean_visits_')]
-blink_count_cols = [c for c in df.columns if c.startswith('blink_count_')]
+mean_visits_cols = [c for c in df.columns if c.startswith('mean_visits_') and '_late_' not in c]
+mean_blink_rate_cols = [c for c in df.columns if c.startswith('mean_blink_rate_')]
 mean_blink_duration_cat_cols = [c for c in df.columns if c.startswith('mean_blink_duration_') and c != 'mean_blink_duration_ms']
 std_blink_duration_cat_cols = [c for c in df.columns if c.startswith('std_blink_duration_')]
-mean_blink_latency_cols = [c for c in df.columns if c.startswith('mean_blink_latency_')]
-global_blink_cols = ['total_blink_count', 'mean_blink_duration_ms', 'mean_blink_interval_ms', 'std_blink_interval_ms']
+mean_blink_latency_norm_cols = [c for c in df.columns if c.startswith('mean_blink_latency_norm_')]
+global_blink_cols = ['total_blink_count', 'mean_blink_duration_ms', 'mean_blink_interval_norm', 'std_blink_interval_norm']
+
+mean_dwell_late_cols = [c for c in df.columns if c.startswith('mean_dwell_pct_late_')]
+mean_visits_late_cols = [c for c in df.columns if c.startswith('mean_visits_late_')]
+mean_offscreen_cols = [c for c in df.columns if c.startswith('mean_offscreen_pct_') and '_late_' not in c]
+mean_offscreen_late_cols = [c for c in df.columns if c.startswith('mean_offscreen_pct_late_')]
 
 numeric_cols = [c for c in df.columns if c not in ['session_id']]
 
 print(f"Column groups:")
-print(f"  mean_dwell_pct:         {len(mean_dwell_cols)}")
-print(f"  std_dwell_pct:          {len(std_dwell_cols)}")
-print(f"  std_delta_dwell_pct:    {len(std_delta_dwell_cols)}")
-print(f"  mean_visits:            {len(mean_visits_cols)}")
-print(f"  blink_count (per-cat):  {len(blink_count_cols)}")
-print(f"  mean_blink_duration:    {len(mean_blink_duration_cat_cols)}")
-print(f"  std_blink_duration:     {len(std_blink_duration_cat_cols)}")
-print(f"  mean_blink_latency:     {len(mean_blink_latency_cols)}")
-print(f"  global_blink:           {len(global_blink_cols)}")
+print(f"  mean_dwell_pct:            {len(mean_dwell_cols)}")
+print(f"  std_dwell_pct:             {len(std_dwell_cols)}")
+print(f"  std_delta_dwell_pct:       {len(std_delta_dwell_cols)}")
+print(f"  mean_visits:               {len(mean_visits_cols)}")
+print(f"  mean_dwell_pct_late:       {len(mean_dwell_late_cols)}")
+print(f"  mean_visits_late:          {len(mean_visits_late_cols)}")
+print(f"  mean_offscreen_pct:        {len(mean_offscreen_cols)}")
+print(f"  mean_offscreen_pct_late:   {len(mean_offscreen_late_cols)}")
+print(f"  mean_blink_rate (per-cat): {len(mean_blink_rate_cols)}")
+print(f"  mean_blink_duration:       {len(mean_blink_duration_cat_cols)}")
+print(f"  std_blink_duration:        {len(std_blink_duration_cat_cols)}")
+print(f"  mean_blink_latency_norm:   {len(mean_blink_latency_norm_cols)}")
+print(f"  global_blink:              {len(global_blink_cols)}")
 
 # %% [markdown]
 # ### Metadata Variables
@@ -180,8 +189,12 @@ desc_std_dwell = descriptive_table(std_dwell_cols, 'Std Dwell Percentage by Cate
 desc_delta = descriptive_table(std_delta_dwell_cols, 'Std Delta Dwell (Threat Bias Variability)')
 desc_visits = descriptive_table(mean_visits_cols, 'Mean Visits by Category')
 desc_global_blink = descriptive_table(global_blink_cols, 'Global Blink Metrics')
-desc_blink_count = descriptive_table(blink_count_cols, 'Blink Count by Category')
-desc_blink_latency = descriptive_table(mean_blink_latency_cols, 'Mean Blink Latency by Category')
+desc_blink_rate = descriptive_table(mean_blink_rate_cols, 'Mean Blink Rate by Category')
+desc_blink_latency = descriptive_table(mean_blink_latency_norm_cols, 'Mean Blink Latency (Normalized) by Category')
+desc_dwell_late = descriptive_table(mean_dwell_late_cols, 'Mean Dwell % Late Window by Category')
+desc_visits_late = descriptive_table(mean_visits_late_cols, 'Mean Visits Late Window by Category')
+desc_offscreen = descriptive_table(mean_offscreen_cols, 'Mean Off-Screen % by Category')
+desc_offscreen_late = descriptive_table(mean_offscreen_late_cols, 'Mean Off-Screen % Late Window by Category')
 
 # %% [markdown]
 # ## 3. Distributional Plots
@@ -206,10 +219,15 @@ def plot_hist_grid(columns, title, filename, ncols=4):
                 ax.plot(x, kde(x), color='red', linewidth=1.5)
             except np.linalg.LinAlgError:
                 pass
-        short_name = col.replace('mean_dwell_pct_', '').replace('std_dwell_pct_', '') \
+        short_name = col.replace('mean_dwell_pct_late_', 'late_') \
+                         .replace('mean_dwell_pct_', '').replace('std_dwell_pct_', '') \
                          .replace('std_delta_dwell_pct_', '') \
-                         .replace('mean_visits_', '').replace('blink_count_', '') \
-                         .replace('mean_blink_latency_', '') \
+                         .replace('mean_visits_late_', 'late_') \
+                         .replace('mean_visits_', '') \
+                         .replace('mean_offscreen_pct_late_', 'late_') \
+                         .replace('mean_offscreen_pct_', '') \
+                         .replace('mean_blink_rate_', '') \
+                         .replace('mean_blink_latency_norm_', '') \
                          .replace('std_blink_duration_', 'std_blink_dur_') \
                          .replace('mean_blink_duration_ms', 'mean_blink_duration') \
                          .replace('mean_blink_duration_', 'mean_blink_dur_')
@@ -233,8 +251,12 @@ plot_hist_grid(std_dwell_cols, 'Std Dwell % by Category', 'hist_std_dwell_pct.pn
 plot_hist_grid(std_delta_dwell_cols, 'Std Delta Dwell % (Threat Bias Variability)', 'hist_std_delta_dwell.png', ncols=4)
 plot_hist_grid(mean_visits_cols, 'Mean Visits by Category', 'hist_mean_visits.png', ncols=4)
 plot_hist_grid(global_blink_cols, 'Global Blink Metrics', 'hist_global_blink.png', ncols=4)
-plot_hist_grid(blink_count_cols, 'Blink Count by Category', 'hist_blink_count.png', ncols=4)
-plot_hist_grid(mean_blink_latency_cols, 'Mean Blink Latency by Category', 'hist_mean_blink_latency.png', ncols=4)
+plot_hist_grid(mean_blink_rate_cols, 'Mean Blink Rate by Category', 'hist_mean_blink_rate.png', ncols=4)
+plot_hist_grid(mean_blink_latency_norm_cols, 'Mean Blink Latency (Normalized) by Category', 'hist_mean_blink_latency_norm.png', ncols=4)
+plot_hist_grid(mean_dwell_late_cols, 'Mean Dwell % Late Window by Category', 'hist_mean_dwell_pct_late.png', ncols=4)
+plot_hist_grid(mean_visits_late_cols, 'Mean Visits Late Window by Category', 'hist_mean_visits_late.png', ncols=4)
+plot_hist_grid(mean_offscreen_cols, 'Mean Off-Screen % by Category', 'hist_mean_offscreen_pct.png', ncols=4)
+plot_hist_grid(mean_offscreen_late_cols, 'Mean Off-Screen % Late Window by Category', 'hist_mean_offscreen_pct_late.png', ncols=4)
 
 # %% [markdown]
 # ## 4. Outlier Detection (Flag Only)
@@ -244,7 +266,9 @@ plot_hist_grid(mean_blink_latency_cols, 'Mean Blink Latency by Category', 'hist_
 
 # %%
 analysis_cols = (mean_dwell_cols + std_delta_dwell_cols + mean_visits_cols
-                 + global_blink_cols + blink_count_cols + mean_blink_latency_cols)
+                 + global_blink_cols + mean_blink_rate_cols + mean_blink_latency_norm_cols
+                 + mean_dwell_late_cols + mean_visits_late_cols
+                 + mean_offscreen_cols + mean_offscreen_late_cols)
 
 outlier_flags = pd.DataFrame(index=df['session_id'])
 for col in analysis_cols:
@@ -315,11 +339,16 @@ def plot_outlier_boxplots(columns, title, filename, ncols=4):
         ax.scatter(1 + jitter, vals.values, c=colors, s=20, alpha=0.7,
                    edgecolors='black', linewidth=0.3, zorder=5)
 
-        short_name = col.replace('mean_dwell_pct_', '').replace('mean_visits_', '') \
-                        .replace('blink_count_', '').replace('mean_blink_latency_', '') \
+        short_name = col.replace('mean_dwell_pct_late_', 'late_') \
+                        .replace('mean_dwell_pct_', '').replace('mean_visits_late_', 'late_vis_') \
+                        .replace('mean_visits_', '') \
+                        .replace('mean_offscreen_pct_late_', 'late_off_') \
+                        .replace('mean_offscreen_pct_', 'off_') \
+                        .replace('mean_blink_rate_', 'rate_') \
+                        .replace('mean_blink_latency_norm_', 'lat_') \
                         .replace('total_blink_count', 'total') \
-                        .replace('mean_blink_interval_ms', 'mean_interval') \
-                        .replace('std_blink_interval_ms', 'std_interval')
+                        .replace('mean_blink_interval_norm', 'mean_interval_norm') \
+                        .replace('std_blink_interval_norm', 'std_interval_norm')
         ax.set_title(short_name, fontsize=9)
         ax.set_xticks([])
         ax.tick_params(labelsize=8)
@@ -336,8 +365,8 @@ def plot_outlier_boxplots(columns, title, filename, ncols=4):
     print(f"Saved {path}")
 
 plot_outlier_boxplots(
-    ['total_blink_count'] + blink_count_cols,
-    'Outlier Box Plots: Blink Counts', 'outlier_boxplot_blink_count.png')
+    ['total_blink_count'] + mean_blink_rate_cols,
+    'Outlier Box Plots: Blink Rate', 'outlier_boxplot_blink_rate.png')
 
 plot_outlier_boxplots(
     mean_visits_cols,
@@ -348,12 +377,28 @@ plot_outlier_boxplots(
     'Outlier Box Plots: Mean Dwell %', 'outlier_boxplot_mean_dwell_pct.png')
 
 plot_outlier_boxplots(
-    ['mean_blink_interval_ms', 'std_blink_interval_ms'],
-    'Outlier Box Plots: Blink Interval', 'outlier_boxplot_blink_interval.png')
+    ['mean_blink_interval_norm', 'std_blink_interval_norm'],
+    'Outlier Box Plots: Blink Interval (Normalized)', 'outlier_boxplot_blink_interval.png')
 
 plot_outlier_boxplots(
-    mean_blink_latency_cols,
-    'Outlier Box Plots: Blink Latency', 'outlier_boxplot_blink_latency.png')
+    mean_blink_latency_norm_cols,
+    'Outlier Box Plots: Blink Latency (Normalized)', 'outlier_boxplot_blink_latency.png')
+
+plot_outlier_boxplots(
+    mean_dwell_late_cols,
+    'Outlier Box Plots: Late Dwell %', 'outlier_boxplot_mean_dwell_pct_late.png')
+
+plot_outlier_boxplots(
+    mean_visits_late_cols,
+    'Outlier Box Plots: Late Visits', 'outlier_boxplot_mean_visits_late.png')
+
+plot_outlier_boxplots(
+    mean_offscreen_cols,
+    'Outlier Box Plots: Off-Screen %', 'outlier_boxplot_mean_offscreen_pct.png')
+
+plot_outlier_boxplots(
+    mean_offscreen_late_cols,
+    'Outlier Box Plots: Late Off-Screen %', 'outlier_boxplot_mean_offscreen_pct_late.png')
 
 # %% [markdown]
 # ### 4b. Multivariate Outliers (Mahalanobis Distance)
@@ -395,9 +440,13 @@ def mahalanobis_outliers(columns, label, p_threshold=0.01):
 md_dwell = mahalanobis_outliers(mean_dwell_cols, 'Mean Dwell %')
 md_visits = mahalanobis_outliers(mean_visits_cols, 'Mean Visits')
 md_blink = mahalanobis_outliers(
-    ['total_blink_count'] + blink_count_cols + ['mean_blink_interval_ms', 'mean_blink_duration_ms'],
-    'Blink Metrics (counts + interval + duration)'
+    ['total_blink_count'] + mean_blink_rate_cols + ['mean_blink_interval_norm', 'mean_blink_duration_ms'],
+    'Blink Metrics (rate + interval + duration)'
 )
+md_dwell_late = mahalanobis_outliers(mean_dwell_late_cols, 'Mean Dwell % Late Window')
+md_visits_late = mahalanobis_outliers(mean_visits_late_cols, 'Mean Visits Late Window')
+md_offscreen = mahalanobis_outliers(mean_offscreen_cols, 'Mean Off-Screen %')
+md_offscreen_late = mahalanobis_outliers(mean_offscreen_late_cols, 'Mean Off-Screen % Late Window')
 
 # %% [markdown]
 # ## 5. Correlation Structure
@@ -407,10 +456,15 @@ def plot_corr_heatmap(columns, title, filename):
     """Plot and save a correlation heatmap."""
     sub = df[columns].dropna()
     corr = sub.corr()
-    short_labels = [c.replace('mean_dwell_pct_', '').replace('std_dwell_pct_', '')
+    short_labels = [c.replace('mean_dwell_pct_late_', 'late_')
+                      .replace('mean_dwell_pct_', '').replace('std_dwell_pct_', '')
                       .replace('std_delta_dwell_pct_', '')
-                      .replace('mean_visits_', '').replace('blink_count_', '')
-                      .replace('mean_blink_latency_', '')
+                      .replace('mean_visits_late_', 'late_')
+                      .replace('mean_visits_', '')
+                      .replace('mean_offscreen_pct_late_', 'late_')
+                      .replace('mean_offscreen_pct_', '')
+                      .replace('mean_blink_rate_', '')
+                      .replace('mean_blink_latency_norm_', '')
                       .replace('std_blink_duration_', 'std_blink_dur_')
                       .replace('mean_blink_duration_ms', 'mean_blink_duration')
                       .replace('mean_blink_duration_', 'mean_blink_dur_')
@@ -431,7 +485,11 @@ def plot_corr_heatmap(columns, title, filename):
 # %%
 plot_corr_heatmap(mean_dwell_cols, 'Correlation: Mean Dwell %', 'corr_mean_dwell_pct.png')
 plot_corr_heatmap(mean_visits_cols, 'Correlation: Mean Visits', 'corr_mean_visits.png')
-plot_corr_heatmap(blink_count_cols, 'Correlation: Blink Count by Category', 'corr_blink_count.png')
+plot_corr_heatmap(mean_blink_rate_cols, 'Correlation: Blink Rate by Category', 'corr_blink_rate.png')
+plot_corr_heatmap(mean_dwell_late_cols, 'Correlation: Mean Dwell % Late Window', 'corr_mean_dwell_pct_late.png')
+plot_corr_heatmap(mean_visits_late_cols, 'Correlation: Mean Visits Late Window', 'corr_mean_visits_late.png')
+plot_corr_heatmap(mean_offscreen_cols, 'Correlation: Mean Off-Screen %', 'corr_mean_offscreen_pct.png')
+plot_corr_heatmap(mean_offscreen_late_cols, 'Correlation: Mean Off-Screen % Late Window', 'corr_mean_offscreen_pct_late.png')
 
 # %%
 # Correlation significance thresholds
@@ -447,7 +505,11 @@ print(f"  |r| >= {r_crit_01:.3f} for p < 0.01")
 # Pairwise significance for each correlation matrix
 for cols, label in [(mean_dwell_cols, 'Mean Dwell %'),
                     (mean_visits_cols, 'Mean Visits'),
-                    (blink_count_cols, 'Blink Count')]:
+                    (mean_blink_rate_cols, 'Blink Rate'),
+                    (mean_dwell_late_cols, 'Mean Dwell % Late'),
+                    (mean_visits_late_cols, 'Mean Visits Late'),
+                    (mean_offscreen_cols, 'Off-Screen %'),
+                    (mean_offscreen_late_cols, 'Off-Screen % Late')]:
     corr = df[cols].corr()
     mask = np.tril(np.ones_like(corr, dtype=bool), k=-1)
     r_vals = corr.where(mask)
@@ -465,8 +527,8 @@ for cols, label in [(mean_dwell_cols, 'Mean Dwell %'),
         for c2 in not_01.index:
             val = not_01.loc[c2, c1]
             if pd.notna(val):
-                short1 = c1.replace('mean_dwell_pct_', '').replace('mean_visits_', '').replace('blink_count_', '')
-                short2 = c2.replace('mean_dwell_pct_', '').replace('mean_visits_', '').replace('blink_count_', '')
+                short1 = c1.split('_')[-1] if '_' in c1 else c1
+                short2 = c2.split('_')[-1] if '_' in c2 else c2
                 print(f"  p<0.05 only: {short1}–{short2} (r = {val:.3f})")
 
 # %%
@@ -491,6 +553,31 @@ for ax, (dc, vc, cat) in zip(axes, scatter_pairs):
 fig.suptitle('Dwell % vs Visits (red = poor gaze quality)', fontsize=12, fontweight='bold')
 fig.tight_layout()
 path = os.path.join(FIG_DIR, 'scatter_dwell_vs_visits.png')
+fig.savefig(path, dpi=600, bbox_inches='tight')
+plt.close(fig)
+print(f"Saved {path}")
+
+# %%
+# Cross-family scatter: late dwell vs late visits
+scatter_pairs_late = []
+for cat in key_cats:
+    dwell_col = f'mean_dwell_pct_late_{cat}'
+    visits_col = f'mean_visits_late_{cat}'
+    if dwell_col in df.columns and visits_col in df.columns:
+        scatter_pairs_late.append((dwell_col, visits_col, cat))
+
+fig, axes = plt.subplots(1, len(scatter_pairs_late), figsize=(5 * len(scatter_pairs_late), 4))
+if len(scatter_pairs_late) == 1:
+    axes = [axes]
+for ax, (dc, vc, cat) in zip(axes, scatter_pairs_late):
+    colors = ['red' if s in POOR_QUALITY_SESSIONS else 'steelblue' for s in df['session_id']]
+    ax.scatter(df[dc], df[vc], c=colors, alpha=0.7, edgecolors='black', linewidth=0.5)
+    ax.set_xlabel(f'Late Dwell % ({cat})')
+    ax.set_ylabel(f'Late Visits ({cat})')
+    ax.set_title(cat)
+fig.suptitle('Late Dwell % vs Late Visits (red = poor gaze quality)', fontsize=12, fontweight='bold')
+fig.tight_layout()
+path = os.path.join(FIG_DIR, 'scatter_late_dwell_vs_visits.png')
 fig.savefig(path, dpi=600, bbox_inches='tight')
 plt.close(fig)
 print(f"Saved {path}")
@@ -566,6 +653,52 @@ if not any((df[col] < 5).any() for col in std_delta_dwell_cols):
     print("  No suspiciously low values found")
 
 # %% [markdown]
+# ### 6d. Late Dwell Range Check
+
+# %%
+print("Late dwell % range check (flag if any value < 0% or > 100%):")
+for col in mean_dwell_late_cols:
+    vals = df[col].dropna()
+    low = df[df[col] < 0]
+    high = df[df[col] > 100]
+    if len(low) > 0 or len(high) > 0:
+        cat = col.replace('mean_dwell_pct_late_', '')
+        if len(low) > 0:
+            for _, row in low.iterrows():
+                pq = " [POOR QUALITY]" if row['session_id'] in POOR_QUALITY_SESSIONS else ""
+                print(f"  {cat}: {row['session_id']} = {row[col]:.2f}% (negative!){pq}")
+        if len(high) > 0:
+            for _, row in high.iterrows():
+                pq = " [POOR QUALITY]" if row['session_id'] in POOR_QUALITY_SESSIONS else ""
+                print(f"  {cat}: {row['session_id']} = {row[col]:.2f}% (> 100%){pq}")
+    else:
+        cat = col.replace('mean_dwell_pct_late_', '')
+        print(f"  {cat}: all in [0, 100] (min={vals.min():.2f}, max={vals.max():.2f})")
+
+# %% [markdown]
+# ### 6e. Off-Screen Percentage Sanity Check
+
+# %%
+print("Off-screen % sanity check:")
+for col in mean_offscreen_cols:
+    vals = df[col].dropna()
+    cat = col.replace('mean_offscreen_pct_', '')
+    print(f"  {cat}: mean={vals.mean():.2f}%, median={vals.median():.2f}%, "
+          f"max={vals.max():.2f}%, min={vals.min():.2f}%")
+
+high_offscreen = df[[c for c in mean_offscreen_cols]].mean(axis=1)
+print(f"\nMean off-screen % across categories per session:")
+print(f"  Range: {high_offscreen.min():.2f}% – {high_offscreen.max():.2f}%")
+flagged = df[high_offscreen > 50]
+if len(flagged) > 0:
+    print(f"  Sessions with mean off-screen > 50%: {len(flagged)}")
+    for _, row in flagged.iterrows():
+        pq = " [POOR QUALITY]" if row['session_id'] in POOR_QUALITY_SESSIONS else ""
+        print(f"    {row['session_id']}: {high_offscreen.loc[row.name]:.2f}%{pq}")
+else:
+    print("  No sessions with mean off-screen > 50%")
+
+# %% [markdown]
 # ## 7. PTSD-Group Visual Preview
 
 # %%
@@ -601,11 +734,17 @@ def plot_group_boxplots(columns, group_col, title, filename, ncols=4):
             group_labels = ['No' if g == '0' else 'Yes' for g in group_labels]
         ax.set_xticklabels(group_labels, fontsize=9)
 
-        short_name = col.replace('mean_dwell_pct_', '').replace('std_dwell_pct_', '') \
+        short_name = col.replace('mean_dwell_pct_late_', 'late_') \
+                         .replace('mean_dwell_pct_', '').replace('std_dwell_pct_', '') \
                          .replace('std_delta_dwell_pct_', '') \
-                         .replace('mean_visits_', '').replace('blink_count_', '') \
-                         .replace('mean_blink_latency_', '').replace('total_blink_count', 'total_blinks') \
-                         .replace('mean_blink_interval_ms', 'blink_interval') \
+                         .replace('mean_visits_late_', 'late_vis_') \
+                         .replace('mean_visits_', '') \
+                         .replace('mean_offscreen_pct_late_', 'late_off_') \
+                         .replace('mean_offscreen_pct_', 'off_') \
+                         .replace('mean_blink_rate_', 'rate_') \
+                         .replace('mean_blink_latency_norm_', 'lat_') \
+                         .replace('total_blink_count', 'total_blinks') \
+                         .replace('mean_blink_interval_norm', 'blink_interval') \
                          .replace('mean_blink_duration_ms', 'blink_duration')
         ax.set_title(short_name, fontsize=10)
         ax.tick_params(labelsize=8)
@@ -634,6 +773,14 @@ plot_group_boxplots(mean_visits_cols, 'if_PTSD',
                     'Mean Visits by PTSD Status', 'ptsd_mean_visits.png')
 plot_group_boxplots(std_dwell_cols, 'if_PTSD',
                     'Std Dwell % by PTSD Status', 'ptsd_std_dwell_pct.png')
+plot_group_boxplots(mean_dwell_late_cols, 'if_PTSD',
+                    'Mean Dwell % Late Window by PTSD Status', 'ptsd_mean_dwell_pct_late.png')
+plot_group_boxplots(mean_visits_late_cols, 'if_PTSD',
+                    'Mean Visits Late Window by PTSD Status', 'ptsd_mean_visits_late.png')
+plot_group_boxplots(mean_offscreen_cols, 'if_PTSD',
+                    'Mean Off-Screen % by PTSD Status', 'ptsd_mean_offscreen_pct.png')
+plot_group_boxplots(mean_offscreen_late_cols, 'if_PTSD',
+                    'Mean Off-Screen % Late Window by PTSD Status', 'ptsd_mean_offscreen_pct_late.png')
 
 # %% [markdown]
 # ### By Antipsychotic Use (Confound Check)
@@ -649,15 +796,25 @@ plot_group_boxplots(mean_visits_cols, 'if_antipsychotic',
                     'Mean Visits by Antipsychotic Use', 'antipsychotic_mean_visits.png')
 plot_group_boxplots(std_dwell_cols, 'if_antipsychotic',
                     'Std Dwell % by Antipsychotic Use', 'antipsychotic_std_dwell_pct.png')
+plot_group_boxplots(mean_dwell_late_cols, 'if_antipsychotic',
+                    'Mean Dwell % Late Window by Antipsychotic Use', 'antipsychotic_mean_dwell_pct_late.png')
+plot_group_boxplots(mean_visits_late_cols, 'if_antipsychotic',
+                    'Mean Visits Late Window by Antipsychotic Use', 'antipsychotic_mean_visits_late.png')
+plot_group_boxplots(mean_offscreen_cols, 'if_antipsychotic',
+                    'Mean Off-Screen % by Antipsychotic Use', 'antipsychotic_mean_offscreen_pct.png')
+plot_group_boxplots(mean_offscreen_late_cols, 'if_antipsychotic',
+                    'Mean Off-Screen % Late Window by Antipsychotic Use', 'antipsychotic_mean_offscreen_pct_late.png')
 
 # %% [markdown]
 # ## Summary
 #
 # This notebook provides:
 # 1. Descriptive statistics with Shapiro-Wilk normality tests for all metric families
+#    (including late-window dwell/visits and off-screen gaze)
 # 2. Distributional plots (histograms + KDE) for visual inspection
 # 3. Univariate (IQR) and multivariate (Mahalanobis) outlier flagging
 # 4. Cross-reference of outliers with the 3 poor gaze quality sessions
-# 5. Correlation structure within metric families
-# 6. Domain-specific sanity checks (blink rate, dwell range, delta dwell uniformity)
+# 5. Correlation structure within metric families (including new families)
+# 6. Domain-specific sanity checks (blink rate, dwell range, delta dwell uniformity,
+#    late dwell range, off-screen percentage)
 # 7. PTSD-group and antipsychotic-group visual previews (descriptive only)
