@@ -625,7 +625,7 @@ report_lines += [
     "",
 ]
 
-with open('reports/eyetracking_metrics_report.md', 'w') as f:
+with open('reports/preprocessing/eyetracking_metrics_report.md', 'w') as f:
     f.write('\n'.join(report_lines))
 
-print("Report saved to reports/eyetracking_metrics_report.md")
+print("Report saved to reports/preprocessing/eyetracking_metrics_report.md")

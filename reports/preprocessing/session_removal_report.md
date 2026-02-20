@@ -41,5 +41,5 @@ avoidance interpretation. The session data is unusable for downstream analysis.
 
 ## Supporting Evidence
 
-- [Gaze Quality Check Report](gaze_quality_check_report.md)
+- [Gaze Quality Check Report](../routine_exploration/gaze_quality_check_report.md)
 - [Eye-Tracking Metrics Overview Report](eyetracking_metrics_overview_report.md)
