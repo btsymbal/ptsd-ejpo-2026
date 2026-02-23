@@ -44,7 +44,7 @@ Cell 7  [code]     - BH correction, results table
 Cell 8  [code]     - Results summary (formatted console output)
 Cell 9  [code]     - Visualization 1: Violin + strip plot
 Cell 10 [code]     - Visualization 2: Forest plot (effect sizes + CIs)
-Cell 11 [code]     - Visualization 3: Bar chart (group means +/- SE)
+Cell 11 [code]     - Visualization 3: Bar chart (group means with 95% CI)
 ```
 
 ### Required imports
@@ -117,7 +117,7 @@ Include these in the notebook for effect size computation:
 - Three standard plots per hypothesis:
   1. Violin + strip plot (split violins, individual points)
   2. Forest plot (effect sizes with 95% CIs, reference line at 0)
-  3. Bar chart (group means with SE error bars)
+  3. Bar chart (group means with 95% CI error bars)
 
 ## Reference Implementation
 

@@ -1,14 +1,16 @@
 # %% [markdown]
-# # H1: Threat Stimulus Dwell Time by PTSD Group
+# # H2: Attention Bias Variability by PTSD Group
 #
-# **Hypothesis**: Participants in the PTSD group will show higher mean dwell time
-# percentage on threat stimuli than the no-PTSD group across pre-defined threat
-# categories.
+# **Hypothesis**: Participants in the PTSD group will show higher within-participant
+# variability (standard deviation) of dwell time percentage on threat stimuli than
+# the no-PTSD group across pre-defined threat categories. Higher variability may
+# indicate attentional dysregulation — an unstable pattern of engagement/disengagement
+# with threat.
 #
-# **Method**: Two-tailed group comparisons (PTSD vs no-PTSD) on mean dwell time
-# percentage for 4 threat categories. Test selection follows normality and
-# variance checks; p-values are corrected for multiple comparisons using
-# Benjamini-Hochberg FDR.
+# **Method**: Two-tailed group comparisons (PTSD vs no-PTSD) on within-participant
+# SD of dwell time percentage for 4 threat categories. Test selection follows
+# normality and variance checks; p-values are corrected for multiple comparisons
+# using Benjamini-Hochberg FDR.
 
 # %%
 import os
@@ -24,10 +26,10 @@ from statsmodels.stats.multitest import multipletests
 os.chdir(Path(__file__).resolve().parent.parent)
 
 THREAT_CATEGORIES = ['angry_face', 'anxiety_inducing', 'warfare', 'soldiers']
-DV_COLS = [f'mean_dwell_pct_{cat}' for cat in THREAT_CATEGORIES]
+DV_COLS = [f'std_dwell_pct_{cat}' for cat in THREAT_CATEGORIES]
 ALPHA = 0.05
 
-FIG_DIR = 'figures/h1_threat_dwell_time'
+FIG_DIR = 'figures/h2_threat_dwell_variability'
 os.makedirs(FIG_DIR, exist_ok=True)
 
 # %% [markdown]
@@ -42,7 +44,7 @@ no_ptsd = df[df['if_PTSD'] == 0]
 print(f"Total participants: {len(df)}")
 print(f"PTSD group:    n = {len(ptsd)}")
 print(f"No-PTSD group: n = {len(no_ptsd)}")
-print(f"\nThreat DV columns: {DV_COLS}")
+print(f"\nDwell variability DV columns: {DV_COLS}")
 
 # %% [markdown]
 # ## 2. Descriptive Statistics
@@ -50,7 +52,7 @@ print(f"\nThreat DV columns: {DV_COLS}")
 # %%
 desc_rows = []
 for cat in THREAT_CATEGORIES:
-    col = f'mean_dwell_pct_{cat}'
+    col = f'std_dwell_pct_{cat}'
     for group_label, group_df in [('PTSD', ptsd), ('No-PTSD', no_ptsd)]:
         vals = group_df[col].dropna()
         desc_rows.append({
@@ -74,7 +76,7 @@ print(desc_df.to_string(index=False, float_format='%.4f'))
 # %%
 assumption_rows = []
 for cat in THREAT_CATEGORIES:
-    col = f'mean_dwell_pct_{cat}'
+    col = f'std_dwell_pct_{cat}'
     ptsd_vals = ptsd[col].dropna()
     no_ptsd_vals = no_ptsd[col].dropna()
 
@@ -134,7 +136,7 @@ def rank_biserial_ci(r, nx, ny, confidence=0.95):
 
 results_rows = []
 for i, cat in enumerate(THREAT_CATEGORIES):
-    col = f'mean_dwell_pct_{cat}'
+    col = f'std_dwell_pct_{cat}'
     ptsd_vals = ptsd[col].dropna()
     no_ptsd_vals = no_ptsd[col].dropna()
     nx, ny = len(ptsd_vals), len(no_ptsd_vals)
@@ -199,7 +201,7 @@ print(results_df[display_cols].to_string(index=False, float_format='%.4f'))
 
 # %%
 print("\n" + "=" * 90)
-print("RESULTS SUMMARY — H1: Threat Dwell Time × PTSD Group")
+print("RESULTS SUMMARY — H2: Dwell Time Variability × PTSD Group")
 print("=" * 90)
 for _, r in results_df.iterrows():
     sig_label = "SIGNIFICANT" if r['Significant_BH'] else "not significant"
@@ -209,7 +211,7 @@ for _, r in results_df.iterrows():
     print(f"    {r['Effect_Size_Type']} = {r['Effect_Size']:.4f}, 95% CI [{r['CI_lo']:.4f}, {r['CI_hi']:.4f}]")
 
 any_sig = results_df['Significant_BH'].any()
-print(f"\nOverall: H1 {'supported' if any_sig else 'NOT supported'} at α = {ALPHA} (BH-corrected)")
+print(f"\nOverall: H2 {'supported' if any_sig else 'NOT supported'} at α = {ALPHA} (BH-corrected)")
 print("=" * 90)
 
 # %% [markdown]
@@ -219,26 +221,26 @@ print("=" * 90)
 plot_df = df[['if_PTSD'] + DV_COLS].copy()
 plot_df['Group'] = plot_df['if_PTSD'].map({1: 'PTSD', 0: 'No-PTSD'})
 plot_long = plot_df.melt(id_vars=['Group'], value_vars=DV_COLS,
-                          var_name='Category', value_name='Mean Dwell %')
-plot_long['Category'] = plot_long['Category'].str.replace('mean_dwell_pct_', '', regex=False)
+                          var_name='Category', value_name='SD Dwell %')
+plot_long['Category'] = plot_long['Category'].str.replace('std_dwell_pct_', '', regex=False)
 
 fig, ax = plt.subplots(figsize=(10, 6))
-sns.violinplot(data=plot_long, x='Category', y='Mean Dwell %', hue='Group',
+sns.violinplot(data=plot_long, x='Category', y='SD Dwell %', hue='Group',
                split=True, inner=None, palette={'PTSD': '#d9534f', 'No-PTSD': '#5bc0de'},
                alpha=0.4, ax=ax)
-sns.stripplot(data=plot_long, x='Category', y='Mean Dwell %', hue='Group',
+sns.stripplot(data=plot_long, x='Category', y='SD Dwell %', hue='Group',
               dodge=True, palette={'PTSD': '#d9534f', 'No-PTSD': '#5bc0de'},
               size=5, alpha=0.7, ax=ax)
 
 handles, labels = ax.get_legend_handles_labels()
 ax.legend(handles[:2], labels[:2], title='Group', loc='upper right')
-ax.set_title('Mean Dwell Time % on Threat Stimuli by PTSD Group')
+ax.set_title('SD of Dwell Time % on Threat Stimuli by PTSD Group')
 ax.set_xlabel('Threat Category')
-ax.set_ylabel('Mean Dwell Time (%)')
+ax.set_ylabel('SD of Dwell Time (%)')
 
-fig.savefig(f'{FIG_DIR}/violin_threat_dwell_by_group.png', dpi=600, bbox_inches='tight')
+fig.savefig(f'{FIG_DIR}/violin_threat_dwell_variability_by_group.png', dpi=600, bbox_inches='tight')
 plt.close(fig)
-print(f'Saved: {FIG_DIR}/violin_threat_dwell_by_group.png')
+print(f'Saved: {FIG_DIR}/violin_threat_dwell_variability_by_group.png')
 
 # %% [markdown]
 # ## 8. Visualization 2 — Forest Plot (Effect Sizes)
@@ -256,7 +258,7 @@ ax.axvline(x=0, color='grey', linestyle='--', linewidth=1)
 ax.set_yticks(y_pos)
 ax.set_yticklabels(results_df['Category'])
 ax.set_xlabel('Effect Size (with 95% CI)')
-ax.set_title('Forest Plot — Effect Sizes for Threat Dwell Time (PTSD vs No-PTSD)')
+ax.set_title('Forest Plot — Effect Sizes for Dwell Time Variability (PTSD vs No-PTSD)')
 ax.invert_yaxis()
 
 fig.savefig(f'{FIG_DIR}/forest_plot_effect_sizes.png', dpi=600, bbox_inches='tight')
@@ -269,7 +271,7 @@ print(f'Saved: {FIG_DIR}/forest_plot_effect_sizes.png')
 # %%
 bar_rows = []
 for cat in THREAT_CATEGORIES:
-    col = f'mean_dwell_pct_{cat}'
+    col = f'std_dwell_pct_{cat}'
     for group_label, group_df in [('PTSD', ptsd), ('No-PTSD', no_ptsd)]:
         vals = group_df[col].dropna()
         bar_rows.append({
@@ -298,10 +300,10 @@ ax.bar(x + width / 2, no_ptsd_means, width, yerr=no_ptsd_ci, label='No-PTSD',
 ax.set_xticks(x)
 ax.set_xticklabels(THREAT_CATEGORIES)
 ax.set_xlabel('Threat Category')
-ax.set_ylabel('Mean Dwell Time (%) (95% CI)')
-ax.set_title('Mean Dwell Time % on Threat Stimuli by Group')
+ax.set_ylabel('SD of Dwell Time (%) (95% CI)')
+ax.set_title('SD of Dwell Time % on Threat Stimuli by Group')
 ax.legend(title='Group')
 
-fig.savefig(f'{FIG_DIR}/bar_threat_dwell_by_group.png', dpi=600, bbox_inches='tight')
+fig.savefig(f'{FIG_DIR}/bar_threat_dwell_variability_by_group.png', dpi=600, bbox_inches='tight')
 plt.close(fig)
-print(f'Saved: {FIG_DIR}/bar_threat_dwell_by_group.png')
+print(f'Saved: {FIG_DIR}/bar_threat_dwell_variability_by_group.png')

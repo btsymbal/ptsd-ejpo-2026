@@ -81,7 +81,7 @@ Even without multiple comparison correction, no category reached significance (a
 #### Forest plot — effect sizes
 ![Forest plot](../../figures/h1_threat_dwell_time/forest_plot_effect_sizes.png)
 
-#### Bar chart — group means ± SE
+#### Bar chart — group means (95% CI)
 ![Bar chart](../../figures/h1_threat_dwell_time/bar_threat_dwell_by_group.png)
 
 ## Conclusion
