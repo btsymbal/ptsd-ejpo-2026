@@ -12,7 +12,7 @@
 #   blink interval metrics (HIGH).
 #
 # Evidence documented in
-# `reports/preanalysis_exploration/eyetracking_metrics_overview_report.md`
+# `reports/preanalysis_overview/eyetracking_metrics_overview_report.md`
 # (sections 4 and 6).
 
 # %%

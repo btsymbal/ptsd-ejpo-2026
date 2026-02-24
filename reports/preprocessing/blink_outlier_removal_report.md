@@ -40,5 +40,5 @@ of blink-related analyses.
 
 ## Supporting Evidence
 
-- [Eye-Tracking Metrics Overview Report](../preanalysis_exploration/eyetracking_metrics_overview_report.md)
+- [Eye-Tracking Metrics Overview Report](../preanalysis_overview/eyetracking_metrics_overview_report.md)
   (sections 4 and 6)

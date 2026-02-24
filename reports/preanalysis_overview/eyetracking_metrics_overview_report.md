@@ -465,5 +465,5 @@ Same pattern as full-window off-screen for antipsychotic groups.
 ---
 
 **Report Generated**: 2026-02-19
-**Analysis Code**: `preanalysis_exploration/eyetracking_metrics_overview.py`
+**Analysis Code**: `preanalysis_overview/eyetracking_metrics_overview.py`
 **Figures**: `figures/eyetracking_metrics_overview/` (52 PNGs)
