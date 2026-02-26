@@ -12,5 +12,8 @@
 *.ipynb
 *.xlsx
 
+# Generated outputs
+production/manuscript.pdf
+
 # macOS system files
 .DS_Store
