@@ -1,4 +1,13 @@
-/data
+/data/*
+# Track final analysis datasets needed to run hypothesis/exploratory scripts
+!/data/simplified/
+/data/simplified/*
+!/data/simplified/dataset_eyetracking_metrics.csv
+!/data/simplified/dataset_eyetracking_metrics_clean.csv
+!/data/simplified/dataset_eyetracking_metrics_blink_clean.csv
+!/data/simplified/temporal_threat_bias_by_session.csv
+!/data/simplified/temporal_threat_bias_aggregated.csv
+!/data/simplified/temporal_threat_bias_variability.csv
 
 *.ipynb
 *.xlsx
