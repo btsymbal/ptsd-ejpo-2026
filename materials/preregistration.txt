@@ -1,0 +1,213 @@
+Study Information
+
+Contributors
+Andrii Solonskyi,
+Bohdan Tsymbal
+
+Description
+This project evaluates whether the attention-bias (AB) test, implemented through a webcam-based eye tracking methodology, can provide markers of PTSD in Ukrainian active-duty military personnel. The motivating problem is practical: mental-health screening in active-duty contexts is difficult to conduct reliably at scale, and routine reliance on self-report can be compromised by low engagement and response distortion. The proposed approach targets this gap by leveraging AB processes (sustained attention to threat, disengagement difficulty, and trial-to-trial dynamics) measured via webcam-based gaze data rather than laboratory-grade eye trackers.
+The study uses a cross-sectional design with data collected from N = 30 soldiers undergoing rehabilitation at the “Forest Glade” hospital in Kyiv prior to redeployment. PTSD (and complex PTSD) status and severity are assessed using a clinician-administered International Trauma Interview (ITI), with medication recorded to support sensitivity and moderation analyses. The experimental task is a webcam-based attentional-bias eye-tracking procedure using a PTSD-relevant stimulus set developed for this context (combat-related imagery, soldier images, emotional faces, military vehicles, and ambiguous anxiety-provoking scenes). The task is designed to extract interpretable gaze metrics that can be feasibly computed from webcam gaze coordinates (e.g., dwell time allocation and related indices), with the broader translational aim of making screening possible with minimal hardware – potentially only a laptop and stable internet connection.
+
+Subjects
+Psychology
+Social and Behavioral Sciences
+Cognitive Psychology
+Medicine and Health Sciences
+Psychiatry and Psychology
+Clinical Psychology
+
+Tags
+Attention bias
+eye-tracking
+PTSD
+
+Hypotheses
+
+All confirmatory hypotheses use two-sided tests with = 0.05, with multiple-comparisons control.
+
+H1 (threat dwell time / sustained attention)
+Participants in the PTSD group will show higher mean dwell time on threat stimuli than the no-PTSD group across pre-defined threat categories.
+
+H2 (variability of threat dwell time)
+Participants in the PTSD group will show higher standard deviation of within-category dwell time than the no-PTSD group across pre-defined threat categories.
+
+H3 (variability of threat-minus-neutral bias)
+Participants in the PTSD group will show higher standard deviation of threat-minus-neutral dwell time difference than the no-PTSD group across pre-defined threat categories.
+
+H4 (severity association)
+Standard deviation of within-category dwell time and standard deviation of threat-minus-neutral dwell time difference will show positive associations with ITI PTSD severity across participants.
+
+H5 (threat monitoring / “re-checking” via visits)
+Participants in the PTSD group will show a higher mean visits count to threat stimuli than the no-PTSD group, with the strongest effects expected for combat-related threat categories. We further predict that the PTSD–no-PTSD group difference will be larger in a later viewing window (e.g., 800–2000 ms post-stimulus onset) than in earlier time windows, consistent with sustained monitoring/difficulty disengaging.
+
+H6 (criterion validity: ITI avoidance subtype)
+Within participants meeting ITI criteria for PTSD/cPTSD, greater ITI avoidance severity will be associated with more avoidance-like gaze behavior toward threat stimuli – operationalized as lower mean dwell time on threat categories and/or lower mean visits count to threat stimuli, particularly in a later viewing window (e.g., 800–2000 ms post-stimulus onset). Because subgroup analyses may be underpowered in this dataset, this hypothesis will be treated as feasibility-limited.
+
+Design Plan
+Study type
+Observational Study - Data is collected from study subjects that are not randomly assigned to a treatment. This includes surveys, “natural experiments,” and regression discontinuity designs.
+
+Blinding
+No blinding is involved in this study.
+
+Is there any additional blinding in this study?
+No data
+
+Study design
+Design: Cross-sectional, between-subjects comparison (PTSD vs no-PTSD), with continuous symptom severity analyses.
+Population/setting: Ukrainian active-duty military personnel undergoing rehabilitation in a medical center prior to redeployment (data collected at “Forest Glade” hospital, Kyiv, Ukraine).
+PTSD assessment: Clinician-administered International Trauma Interview (ITI), focused on ICD-11 PTSD and Complex PTSD (Roberts et al., 2025).
+Task: A webcam-based attentional-bias eye-tracking task using an image set developed for trauma-relevant contexts (AI-generated stimuli; categories pre-defined prior to data collection). Trials consisted of timed slides with two images.
+Stimulus categories (pre-defined): combat scenes, soldier images, military vehicles, emotional faces (with emotion subcategories), ambiguous anxiety-provoking scenes, exhaustion imagery, positive scenes, and neutral comparator images (paired within trials). The exact category-to-stimulus mapping is fixed in the study materials/codebook used during data collection and will not be altered for analysis.
+Threat vs non-threat coding: confirmatory hypotheses refer to the subset of categories pre-labeled as threat-relevant in the study’s stimulus codebook. Neutral comparator images are used for within-trial contrasts (DT% ). Positive scenes (and any other categories pre-labeled as non-threat) will be analyzed descriptively or exploratorily, not as part of the confirmatory “threat” test families.
+
+Randomization
+No data
+
+Sampling Plan
+Existing Data
+Registration prior to analysis of the data
+
+Explanation of existing data
+The dataset was collected and compiled by the analyst, but no descriptive statistics, plots, group comparisons, correlations, or other summaries of the study variables have been produced or reviewed by the research team. Access to the raw and derived eye-tracking files has been limited to data handling and integrity checks required for storage/formatting (e.g., confirming file completeness and readability), without examining outcome distributions or any PTSD–attention metric relationships. All analytic decisions and confirmatory tests will be conducted for the first time after this registration.
+
+Data collection procedures
+Data were collected on-site at the Forest Glade (“Лісова Поляна”) hospital (Kyiv, Ukraine) among Ukrainian active-duty military personnel undergoing rehabilitation prior to redeployment. Recruitment was conducted through (a) an internal hospital messenger chat group and (b) referrals from treating clinicians/doctors. The study was presented as a brief research assessment aimed at improving early detection of post-traumatic conditions using an attention-based test. Participation occurred in the rehabilitation department during an announced time window; each session lasted approximately 20–30 minutes and was completed in a single visit.
+
+Eligibility screening and selection. Potential participants were identified from the available inpatient pool via clinician referral and self-selection after viewing the announcement. Initial eligibility was based on: (1) being an active-duty service member receiving rehabilitation at the hospital during the recruitment period; (2) clinician judgement of probable PTSD (used for referral/enrichment at recruitment, not as the final diagnostic criterion); and (3) absence of eye injuries or major vision problems that would interfere with the webcam-based gaze task. Final PTSD diagnostic classification and symptom severity were determined after participation using the clinician-administered International Trauma Interview (ITI; ICD-11 PTSD and Complex PTSD criteria).
+
+Data collection procedure. After providing consent, participants completed: (1) a clinician interview component (ITI) administered by a qualified clinician, and (2) a webcam-based attention-bias eye-tracking task administered on a study laptop. During the task, participants viewed a sequence of paired images and were instructed to look at the screen while the webcam recorded gaze coordinates. The task and interview were completed during the same session. No monetary compensation was provided (or, if compensation was provided, specify the exact form/amount).
+
+Data collection was completed prior to registration; the present registration covers the planned analyses of the already collected dataset.
+
+No files selected
+
+Sample size
+Our final sample size was N = 30 participants.
+
+Sample size rationale
+This sample size was determined by the feasibility-focused nature of the study and the practical constraints on access to eligible active-duty personnel in the rehabilitation setting.
+
+Stopping rule
+No data
+
+Variables
+Manipulated variables
+No data
+
+No files selected
+
+Measured variables
+
+1. Grouping / predictors
+• PTSD status (primary grouping variable): binary grouping derived from ITI diagnosis.
+PTSD group: participants meeting ICD-11 PTSD criteria on the ITI (including those who meet criteria for ICD-11 Complex PTSD, which by definition includes PTSD symptom clusters).
+No-PTSD group: participants not meeting ITI criteria for PTSD or Complex PTSD.
+• PTSD symptom severity (continuous): ITI PTSD severity score as recorded/scored per ITI guidance (Roberts et al., 2025). If multiple severity scoring options are available, we will use the ITI PTSD symptom total (and will document the exact scoring rule in analysis code).
+• Medication (planned covariate / moderator): medication status recorded at assessment (e.g., antipsychotic use). Medication analyses are exploratory unless explicitly stated otherwise for a specific model.
+
+2. Eye-tracking AOI measures (trial-level)
+All AOI-based measures are computed per trial, using the AOI boundaries defined by the task (image rectangles on screen).
+• Valid gaze sample: a timestamped gaze coordinate that is present (non-missing) and within the screen coordinate system.
+• Dwell time (DT): total time (ms) during which valid gaze samples fall within a given AOI within a trial. DT will be computed from timestamps (i.e., summing inter-sample durations for consecutive samples inside the AOI).
+• Gaze entry segment: a contiguous time segment during which consecutive valid gaze samples fall within a given AOI.
+• Visit: a gaze entry segment into an AOI lasting ≥100 ms. Gaze entry segments <100 ms are treated as saccadic crossings and excluded from visit-based metrics.
+• Trial duration: the fixed presentation duration for that trial slide (ms), taken from the task log.
+• Dwell-time percentage (DT%): DT% = 100 × (DT / T_trial)
+
+If a participant has insufficient usable trials for a category (see quality criteria), that participant-category value will be treated as missing for category-specific analyses.
+
+No files selected
+
+Indices
+
+1. Derived attention-bias (AB) and variability (ABV) measures
+Definitions are computed at the trial level, then summarized within participant.
+• Threat AOI: the AOI containing the threat-category stimulus on that trial.
+• Opposing neutral AOI: the neutral comparator AOI paired with the threat stimulus on that trial (predefined by the task; typically spatially paired/opposed on the slide).
+• Attention bias (AB; trial-level): Δ DT% = DT%(threat) − DT%(neutral)
+• Attention bias variability from dwell time (ABV_DT): within-participant standard deviation of DT%(threat) across trials for a given threat category.
+• Attention bias variability from threat-minus-neutral (ABV_Δ): within-participant standard deviation of DT% across trials for a given threat category.
+
+2. Participant-level aggregation
+For each participant and each pre-defined threat category c:
+• DT%_c (mean): mean DT%_threat across usable trials in category c.
+• ABV_DT,c: SD of DT%_threat across usable trials in category c.
+• ABV_Δ,c: SD of Δ DT% across usable trials in category c.
+• Visits_c (mean): mean number of visits to threat AOIs across usable trials in category c.
+
+No files selected
+
+Analysis Plan
+Statistical models
+General approach
+Unit of analysis: participant-level summary metrics, computed separately for each threat category.
+Primary outputs: group difference estimates, effect sizes, confidence intervals, raw and corrected p-values.
+
+Group comparisons (H1, H2, H3, H5, H6)
+For each threat category c, we will compare PTSD vs no-PTSD on:
+• DT%_c (mean): mean DT%_threat across usable trials in category c.
+• ABV_DT,c: SD of DT%_threat across usable trials in category c.
+• ABV_Delta,c: SD of Delta DT% across usable trials in category c.
+• Visits_c (mean): mean number of visits to threat AOIs across usable trials in category c.
+
+Primary test: Welch’s two-sample t-test (robust to unequal variances).
+Effect size: Hedges’ g with 95% CI (bootstrap CI where appropriate).
+Sensitivity: Mann–Whitney U test with Cliff’s delta (reported alongside; not used to “choose” significance).
+
+Multiple comparisons control:
+Because analyses are repeated across multiple threat categories, we will control multiplicity within each outcome family using Benjamini–Hochberg false discovery rate (FDR) control (Benjamini & Hochberg, 1995) at q = 0.05:
+Family A: H1 tests across categories DT%_c (mean).
+Family B: H2 tests across categories ABV_DT,c.
+Family C: H3 tests across categories ABV_Delta,c.
+Family D: H5 tests across categories Visits_c (mean).
+Family E/F: H6 tests across categories DT%_c (mean) / Visits_c (mean).
+We will report both raw p-values and FDR-adjusted p-values.
+
+Correlations with PTSD severity (H4)
+For each category c, we will compute associations between ITI PTSD severity and:
+ABV DT, c
+ABV Δ, c
+
+Primary association metric: Spearman’s  with 95% CI (bootstrap).
+Sensitivity: Kendall’s taub if there are extensive tied ranks.
+Multiple comparisons: Benjamini–Hochberg FDR within each ABV family across categories (separately for ABV DT and ABV Δ).
+
+
+Preregistration Draft.docx
+Transformations
+Outliers and transformations
+We will not exclude participants based on extreme outcome values alone.
+If any values are implausible due to processing errors (e.g., DT% outside [0,100] due to logging issues), we will correct the processing pipeline and recompute metrics; all changes will be documented.
+For severity correlations, we will report rank-based associations (Spearman; Section 8.4) to reduce sensitivity to non-normality and outliers; we will also report whether results are driven by single influential observations (descriptively), without removing such cases unless a clear data-quality error is identified.
+
+Inference criteria
+All confirmatory hypotheses use two-sided tests with = 0.05, with multiple-comparisons control
+
+Data exclusion
+A trial is considered usable if:
+a) the proportion of valid gaze time is ≥50% of the trial duration (i.e., valid gaze samples cover at least half of the presentation time).
+Rationale: DT% uses trial duration in the denominator; therefore, excessive tracking loss would artifactually reduce DT% and distort variability estimates.
+
+
+A participant is included if:
+a) at least 60% of all trials are usable, and
+b) for each category analyzed, the participant contributes at least 5 usable trials to that category.
+
+Missing data
+Trial-level missingness is addressed via the trial exclusion rule above.
+Category-level missingness (insufficient usable trials) will lead to missing participant-category values; analyses for that category will use the available participants (and we will report n per test).
+
+Exploratory analysis
+E1. Blink count differences and PTSD
+We will examine whether the PTSD group shows increased blink counts, and whether blink count varies by threat category. Because webcam eye tracking may have limited temporal precision for blink detection, these results will be treated as provisional/feasibility evidence.
+E2. Medication effects and interactions
+We will explore whether medication status (e.g., antipsychotic use) moderates attention metrics (group × medication), using regression/ANOVA-style models with appropriate diagnostics, and clearly marking these as exploratory.
+E3. Temporal dynamics / periodicity of trial-level attention bias
+We will visualize trial-level DT% over trial order within participants and explore whether dynamic indices (e.g., variability parameters inspired by temporal-dynamics approaches) differ by group, referencing temporal-dynamics work (Zvielli et al., 2015; Schäfer et al., 2016). Any data-driven choices (e.g., smoothing windows, frequency bands) will be documented as exploratory.
+
+Other
+Other
+Reporting: We will report all pre-specified analyses, all exclusions, and all exploratory analyses. We will provide effect sizes and uncertainty intervals in addition to p-values.
+Code and provenance: Analysis scripts, preprocessing code, and a data dictionary will be made available in an OSF repository (or comparable open repository), subject to privacy and security constraints.
+Data sharing: We will share de-identified, participant-level and (where feasible) trial-level derived data. Raw webcam video will not be shared. Stimulus sharing will comply with licensing/ethical constraints (AI-generated images and any restrictions will be documented).
