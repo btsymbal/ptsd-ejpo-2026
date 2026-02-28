@@ -1,6 +1,6 @@
 # Table 4. Between-Group Results: Dwell Variability (H2) and Delta Dwell Variability (H3)
 
-| Hypothesis | DV | Category | Test | *t* | *p* | *p*_BH | *d* | 95% CI |
+| Hypothesis | DV | Category | Test | *t*(27) | *p* | *p*_BH | *d* | 95% CI |
 |:---|:---|:---|:---|---:|---:|---:|---:|:---|
 | H2 | SD dwell % | angry_face | Student's *t* | 2.00 | .055 | .221 | **0.76** | [−0.53, 2.04] |
 | H2 | SD dwell % | anxiety_inducing | Student's *t* | 1.65 | .111 | .223 | 0.62 | [−0.51, 1.76] |

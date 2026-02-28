@@ -2,7 +2,7 @@
 
 ## H1: Mean Dwell Time (PTSD vs. No-PTSD)
 
-| Category | Shapiro PTSD (*W*, *p*) | Shapiro No-PTSD (*W*, *p*) | Levene (*F*, *p*) | Both Normal | Equal Var | Test Used |
+| Category | Shapiro PTSD (*W*, *p*) | Shapiro No-PTSD (*W*, *p*) | Levene *F*(1, 27), *p* | Both Normal | Equal Var | Test Used |
 |:---|:---|:---|:---|:---:|:---:|:---|
 | angry_face | 0.976, .914 | 0.916, .253 | 0.652, .426 | Yes | Yes | Student's *t* |
 | anxiety_inducing | 0.872, **.024** | 0.931, .387 | 0.002, .967 | **No** | Yes | Mann-Whitney *U* |
@@ -11,7 +11,7 @@
 
 ## H2: Dwell Variability (PTSD vs. No-PTSD)
 
-| Category | Shapiro PTSD (*W*, *p*) | Shapiro No-PTSD (*W*, *p*) | Levene (*F*, *p*) | Both Normal | Equal Var | Test Used |
+| Category | Shapiro PTSD (*W*, *p*) | Shapiro No-PTSD (*W*, *p*) | Levene *F*(1, 27), *p* | Both Normal | Equal Var | Test Used |
 |:---|:---|:---|:---|:---:|:---:|:---|
 | angry_face | 0.939, .307 | 0.947, .592 | 0.153, .699 | Yes | Yes | Student's *t* |
 | anxiety_inducing | 0.909, .097 | 0.967, .875 | 1.179, .287 | Yes | Yes | Student's *t* |
@@ -20,7 +20,7 @@
 
 ## H3: Delta Dwell Variability (PTSD vs. No-PTSD)
 
-| Category | Shapiro PTSD (*W*, *p*) | Shapiro No-PTSD (*W*, *p*) | Levene (*F*, *p*) | Both Normal | Equal Var | Test Used |
+| Category | Shapiro PTSD (*W*, *p*) | Shapiro No-PTSD (*W*, *p*) | Levene *F*(1, 27), *p* | Both Normal | Equal Var | Test Used |
 |:---|:---|:---|:---|:---:|:---:|:---|
 | angry_face | 0.896, .058 | 0.963, .822 | 0.037, .850 | Yes | Yes | Student's *t* |
 | anxiety_inducing | 0.933, .248 | 0.922, .307 | 0.158, .695 | Yes | Yes | Student's *t* |
@@ -43,7 +43,7 @@
 
 ## H5: Visit Counts — Family 1: Overall Visits (PTSD vs. No-PTSD)
 
-| Category | Shapiro PTSD (*W*, *p*) | Shapiro No-PTSD (*W*, *p*) | Levene (*F*, *p*) | Both Normal | Equal Var | Test Used |
+| Category | Shapiro PTSD (*W*, *p*) | Shapiro No-PTSD (*W*, *p*) | Levene *F*(1, 27), *p* | Both Normal | Equal Var | Test Used |
 |:---|:---|:---|:---|:---:|:---:|:---|
 | angry_face | 0.961, .650 | 0.916, .254 | 0.548, .466 | Yes | Yes | Student's *t* |
 | anxiety_inducing | 0.945, .381 | 0.949, .626 | 0.881, .356 | Yes | Yes | Student's *t* |
@@ -52,7 +52,7 @@
 
 ## H5: Visit Counts — Family 2: Late-Window Visits (PTSD vs. No-PTSD)
 
-| Category | Shapiro PTSD (*W*, *p*) | Shapiro No-PTSD (*W*, *p*) | Levene (*F*, *p*) | Both Normal | Equal Var | Test Used |
+| Category | Shapiro PTSD (*W*, *p*) | Shapiro No-PTSD (*W*, *p*) | Levene *F*(1, 27), *p* | Both Normal | Equal Var | Test Used |
 |:---|:---|:---|:---|:---:|:---:|:---|
 | angry_face | 0.978, .934 | 0.920, .281 | 0.113, .740 | Yes | Yes | Student's *t* |
 | anxiety_inducing | 0.937, .283 | 0.961, .800 | 1.960, .173 | Yes | Yes | Student's *t* |

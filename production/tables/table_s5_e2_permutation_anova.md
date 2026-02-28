@@ -2,7 +2,7 @@
 
 ## Main Effect: PTSD
 
-| Family | DV | *F* | *p*_perm | *p*_BH |
+| Family | DV | *F*(1, 25) | *p*_perm | *p*_BH |
 |:---|:---|---:|---:|---:|
 | F1: Mean Dwell % | angry_face | 0.37 | .558 | .820 |
 | | anxiety_inducing | 0.71 | .404 | .820 |
@@ -19,7 +19,7 @@
 
 ## Main Effect: Antipsychotic
 
-| Family | DV | *F* | *p*_perm | *p*_BH |
+| Family | DV | *F*(1, 25) | *p*_perm | *p*_BH |
 |:---|:---|---:|---:|---:|
 | F1: Mean Dwell % | angry_face | 1.89 | .189 | .189 |
 | | anxiety_inducing | 2.03 | .169 | .189 |
@@ -36,7 +36,7 @@
 
 ## Interaction: PTSD × Antipsychotic
 
-| Family | DV | *F* | *p*_perm | *p*_BH |
+| Family | DV | *F*(1, 25) | *p*_perm | *p*_BH |
 |:---|:---|---:|---:|---:|
 | F1: Mean Dwell % | angry_face | 0.04 | .852 | .852 |
 | | anxiety_inducing | 0.61 | .444 | .852 |

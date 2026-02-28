@@ -2,7 +2,7 @@
 
 ## Family 1: Raw Dwell Variability (SD Dwell %)
 
-| Category | Test | *r* | *p* | *p*_BH | 95% CI |
+| Category | Test | *r*(15) | *p* | *p*_BH | 95% CI |
 |:---|:---|---:|---:|---:|:---|
 | angry_face | Pearson's *r* | 0.14 | .606 | .606 | [−0.37, 0.58] |
 | anxiety_inducing | Pearson's *r* | −0.40 | .116 | .201 | [−0.74, 0.11] |
@@ -11,7 +11,7 @@
 
 ## Family 2: Delta Dwell Variability (SD Delta Dwell %)
 
-| Category | Test | *r* | *p* | *p*_BH | 95% CI |
+| Category | Test | *r*(15) | *p* | *p*_BH | 95% CI |
 |:---|:---|---:|---:|---:|:---|
 | angry_face | Pearson's *r* | −0.18 | .491 | .491 | [−0.61, 0.33] |
 | anxiety_inducing | Pearson's *r* | −0.29 | .253 | .338 | [−0.68, 0.22] |

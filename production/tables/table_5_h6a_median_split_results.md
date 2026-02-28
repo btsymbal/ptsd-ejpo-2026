@@ -2,14 +2,14 @@
 
 ## Panel A: Angry Face Results Across All 6 DV Families
 
-| DV Family | Metric | Test | Statistic | *p* | *p*_BH | Effect Size | 95% CI |
-|:---|:---|:---|---:|---:|---:|:---|:---|
-| F1: Total dwell % | mean_dwell_pct | Student's *t* | −2.68 | .017 | .068 | *d* = **−1.30** | [−3.35, 0.74] |
-| F2: Visit count | mean_visits | Student's *t* | −2.11 | .052 | .208 | *d* = **−1.03** | [−2.74, 0.69] |
-| F3: Late dwell % | mean_dwell_pct_late | Student's *t* | −2.24 | .041 | .163 | *d* = **−1.09** | [−2.87, 0.70] |
-| F4: Late visits | mean_visits_late | Student's *t* | −1.69 | .112 | .447 | *d* = −0.82 | [−2.31, 0.66] |
-| F5: Off-screen % | mean_offscreen_pct | Student's *t* | 1.41 | .179 | .351 | *d* = 0.68 | [−0.66, 2.03] |
-| F6: Late off-screen % | mean_offscreen_pct_late | Student's *t* | 1.08 | .295 | .591 | *d* = 0.53 | [−0.67, 1.73] |
+| DV Family | Metric | Test | Test Statistic | *p* | *p*_BH | Effect Size | 95% CI |
+|:---|:---|:---|:---|---:|---:|:---|:---|
+| F1: Total dwell % | mean_dwell_pct | Student's *t* | *t*(15) = −2.68 | .017 | .068 | *d* = **−1.30** | [−3.35, 0.74] |
+| F2: Visit count | mean_visits | Student's *t* | *t*(15) = −2.11 | .052 | .208 | *d* = **−1.03** | [−2.74, 0.69] |
+| F3: Late dwell % | mean_dwell_pct_late | Student's *t* | *t*(15) = −2.24 | .041 | .163 | *d* = **−1.09** | [−2.87, 0.70] |
+| F4: Late visits | mean_visits_late | Student's *t* | *t*(15) = −1.69 | .112 | .447 | *d* = −0.82 | [−2.31, 0.66] |
+| F5: Off-screen % | mean_offscreen_pct | Student's *t* | *t*(15) = 1.41 | .179 | .351 | *d* = 0.68 | [−0.66, 2.03] |
+| F6: Late off-screen % | mean_offscreen_pct_late | Student's *t* | *t*(15) = 1.08 | .295 | .591 | *d* = 0.53 | [−0.67, 1.73] |
 
 ## Panel B: Notable Other-Category Effects
 
