@@ -21,7 +21,7 @@ os.chdir(Path(__file__).resolve().parent.parent)
 
 CV_HIGH = 1.0
 CV_MODERATE = 0.5
-FIG_DIR = 'figures/images_analysis'
+FIG_DIR = 'figures/images_analysis/cv_dwell_time'
 REPORT_DIR = 'reports/images_analysis'
 os.makedirs(FIG_DIR, exist_ok=True)
 os.makedirs(REPORT_DIR, exist_ok=True)

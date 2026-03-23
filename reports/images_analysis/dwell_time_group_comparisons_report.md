@@ -249,15 +249,15 @@ Images with **unexpected direction**: 34/93
 
 ## Figures
 
-- Forest plot (angry_face): `figures/images_analysis/forest_plot_angry_face.png`
-- Forest plot (anxiety_inducing): `figures/images_analysis/forest_plot_anxiety_inducing.png`
-- Forest plot (combat_vehicles): `figures/images_analysis/forest_plot_combat_vehicles.png`
-- Forest plot (happy_event): `figures/images_analysis/forest_plot_happy_event.png`
-- Forest plot (happy_face): `figures/images_analysis/forest_plot_happy_face.png`
-- Forest plot (neutral): `figures/images_analysis/forest_plot_neutral.png`
-- Forest plot (neutral_face): `figures/images_analysis/forest_plot_neutral_face.png`
-- Forest plot (sad_face): `figures/images_analysis/forest_plot_sad_face.png`
-- Forest plot (sleep_related): `figures/images_analysis/forest_plot_sleep_related.png`
-- Forest plot (soldiers): `figures/images_analysis/forest_plot_soldiers.png`
-- Forest plot (warfare): `figures/images_analysis/forest_plot_warfare.png`
+- Forest plot (angry_face): `figures/images_analysis/group_comparisons_dwell_time/forest_plot_angry_face.png`
+- Forest plot (anxiety_inducing): `figures/images_analysis/group_comparisons_dwell_time/forest_plot_anxiety_inducing.png`
+- Forest plot (combat_vehicles): `figures/images_analysis/group_comparisons_dwell_time/forest_plot_combat_vehicles.png`
+- Forest plot (happy_event): `figures/images_analysis/group_comparisons_dwell_time/forest_plot_happy_event.png`
+- Forest plot (happy_face): `figures/images_analysis/group_comparisons_dwell_time/forest_plot_happy_face.png`
+- Forest plot (neutral): `figures/images_analysis/group_comparisons_dwell_time/forest_plot_neutral.png`
+- Forest plot (neutral_face): `figures/images_analysis/group_comparisons_dwell_time/forest_plot_neutral_face.png`
+- Forest plot (sad_face): `figures/images_analysis/group_comparisons_dwell_time/forest_plot_sad_face.png`
+- Forest plot (sleep_related): `figures/images_analysis/group_comparisons_dwell_time/forest_plot_sleep_related.png`
+- Forest plot (soldiers): `figures/images_analysis/group_comparisons_dwell_time/forest_plot_soldiers.png`
+- Forest plot (warfare): `figures/images_analysis/group_comparisons_dwell_time/forest_plot_warfare.png`
 

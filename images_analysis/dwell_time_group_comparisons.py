@@ -22,7 +22,7 @@ from statsmodels.stats.multitest import multipletests
 os.chdir(Path(__file__).resolve().parent.parent)
 
 ALPHA = 0.05
-FIG_DIR = 'figures/images_analysis'
+FIG_DIR = 'figures/images_analysis/group_comparisons_dwell_time'
 REPORT_DIR = 'reports/images_analysis'
 os.makedirs(FIG_DIR, exist_ok=True)
 os.makedirs(REPORT_DIR, exist_ok=True)
@@ -529,7 +529,7 @@ for cat in categories:
     report_lines.append(f'- Forest plot ({cat}): `{FIG_DIR}/forest_plot_{cat}.png`')
 report_lines.append('')
 
-report_path = os.path.join(REPORT_DIR, 'images_analysis_report.md')
+report_path = os.path.join(REPORT_DIR, 'dwell_time_group_comparisons_report.md')
 with open(report_path, 'w') as f:
     f.write('\n'.join(report_lines) + '\n')
 print(f"Report written to {report_path}")

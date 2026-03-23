@@ -674,6 +674,6 @@ Moderate-to-high CV (> 0.5): 148/150 images
 
 ## Figures
 
-- PTSD CV bar plot: `figures/images_analysis/cv_barplot_ptsd.png`
-- No-PTSD CV bar plot: `figures/images_analysis/cv_barplot_no_ptsd.png`
+- PTSD CV bar plot: `figures/images_analysis/cv_dwell_time/cv_barplot_ptsd.png`
+- No-PTSD CV bar plot: `figures/images_analysis/cv_dwell_time/cv_barplot_no_ptsd.png`
 
