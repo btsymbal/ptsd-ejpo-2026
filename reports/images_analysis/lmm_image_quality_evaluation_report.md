@@ -115,32 +115,32 @@ Diagnostic plots: `figures/images_analysis/lmm_image_quality/assumption_diagnost
 
 | Image ID | Category | BLUP | CV (PTSD) | ES Type | Effect Size | p (uncorr) | Skewness | Criteria Met |
 |----------|----------|------|-----------|---------|-------------|------------|----------|--------------|
-| fefWMtd9R8KSv7H2BTpIrw | anxiety_inducing | -2.2514 | 1.1635 | rank-biserial r | -0.2255 | 0.3178 | 0.9105 | BLUP, CV, ES |
-| 68123391 | sad_face | -1.9638 | 1.1623 | rank-biserial r | -0.1471 | 0.5165 | 1.2632 | BLUP, CV, ES |
-| WMKKOlK4QrGOs3Cn2b_lZg | soldiers | -4.8399 | 1.1310 | rank-biserial r | -0.3186 | 0.1554 | 0.3388 | BLUP, CV, ES |
-| axcFiBXmT_69RLbTxgEX_g | angry_face | -1.9732 | 1.1235 | rank-biserial r | -0.1373 | 0.5472 | 1.0020 | BLUP, CV, ES |
-| 68123521 | happy_face | 1.2606 | 1.0574 | rank-biserial r | 0.0882 | 0.7059 | 0.9952 | BLUP, CV, ES |
-| KzR2IFB3TZOI8LzfUmb0Gw | warfare | -4.3504 | 1.0535 | rank-biserial r | -0.0833 | 0.7225 | 0.8580 | BLUP, CV, ES |
-| dIsJdajoT4msRkkJ_zfW3w | sleep_related | -0.5619 | 0.9525 | rank-biserial r | 0.0882 | 0.7059 | 0.9102 | BLUP, CV, ES |
-| ScZovXGJRdO257M1YbYzOw | neutral | -1.1700 | 1.2360 | rank-biserial r | -0.0686 | 0.7673 | 1.2848 | CV, ES |
-| YMjbkdnMSqilocbDaFK_lQ | neutral | -0.8795 | 1.1993 | rank-biserial r | -0.0196 | 0.9467 | 1.2554 | CV, ES |
-| aX7_5eB-SruGeFTptfKWlw | neutral | -0.1690 | 1.1499 | rank-biserial r | -0.1471 | 0.5198 | 1.1261 | BLUP, CV |
-| RriA_iA-T8CtzcT6pDhKcA | neutral | -0.7807 | 1.1279 | rank-biserial r | 0.0343 | 0.8938 | 0.8764 | CV, ES |
-| D50IOgoBSkCOAosH87negA | combat_vehicles | 0.6446 | 1.1158 | rank-biserial r | -0.0392 | 0.8768 | 1.1392 | CV, ES |
-| a5wTdTZzRBWI8S5rtGpSnw | neutral | -1.5757 | 1.1037 | rank-biserial r | 0.0490 | 0.8414 | 1.5358 | CV, ES |
-| CLZddDIORpCOa5MK6Rsc7w | warfare | -0.6577 | 1.1016 | rank-biserial r | -0.1373 | 0.5494 | 0.8891 | CV, ES |
-| VBsOU00iTcmFmqu6o4q07A | combat_vehicles | -9.1758 | 1.0877 | rank-biserial r | 0.0245 | 0.9284 | 1.9443 | BLUP, CV |
-| E0GzwqkNRt2EbWvJjA60Hw | anxiety_inducing | -1.5411 | 1.0213 | rank-biserial r | 0.0294 | 0.9118 | 1.3241 | BLUP, CV |
-| Onhyu_ssRze6tmryDPDhcw | warfare | -2.1437 | 1.0111 | rank-biserial r | 0.1422 | 0.5324 | 0.7429 | BLUP, CV |
-| aFt8UlJUS7WAxa3lTutG-g | neutral | 0.1284 | 0.9847 | rank-biserial r | 0.0931 | 0.6899 | 0.9749 | BLUP, ES |
-| 68123524 | sad_face | -1.2294 | 0.9662 | rank-biserial r | 0.0833 | 0.7228 | 1.0181 | BLUP, CV |
-| Byi3ZPboRuWBVDB9i8iTHA | angry_face | -0.8867 | 0.8967 | Cohen's d | -0.4251 | 0.2694 | 0.8869 | CV, ES |
-| UhDwyHuQSByzKUI5ODt3BA | neutral | 0.0890 | 0.8391 | rank-biserial r | 0.0882 | 0.7062 | 1.8016 | BLUP, ES |
-| Ym_NeAeOS8GjRc7sHx7leQ | neutral_face | 1.5378 | 0.6870 | Cohen's d | 0.3633 | 0.3438 | 0.3464 | BLUP, ES |
-| cpneNStTRAyJlnfbtOB0Zg | combat_vehicles | -2.0567 | 0.6472 | Cohen's d | -0.0896 | 0.8139 | 0.1393 | BLUP, ES |
-| 68123428 | happy_face | 1.1768 | 0.6397 | Cohen's d | 0.2625 | 0.4923 | 0.3206 | BLUP, ES |
-| CHk-QJZ1ThGlvByAi3I_RQ | neutral_face | 3.6397 | 0.6185 | rank-biserial r | 0.4118 | 0.0654 | 0.8475 | BLUP, ES |
-| avk_faNVR-etdQf4CvXR0A | neutral_face | 4.3589 | 0.4972 | Cohen's d | 0.0941 | 0.8049 | -0.0459 | BLUP, ES |
+| [fefWMtd9R8KSv7H2BTpIrw](../../materials/stimuli/fefWMtd9R8KSv7H2BTpIrw.png) | anxiety_inducing | -2.2514 | 1.1635 | rank-biserial r | -0.2255 | 0.3178 | 0.9105 | BLUP, CV, ES |
+| [68123391](../../materials/stimuli/68123391.png) | sad_face | -1.9638 | 1.1623 | rank-biserial r | -0.1471 | 0.5165 | 1.2632 | BLUP, CV, ES |
+| [WMKKOlK4QrGOs3Cn2b_lZg](../../materials/stimuli/WMKKOlK4QrGOs3Cn2b_lZg.png) | soldiers | -4.8399 | 1.1310 | rank-biserial r | -0.3186 | 0.1554 | 0.3388 | BLUP, CV, ES |
+| [axcFiBXmT_69RLbTxgEX_g](../../materials/stimuli/axcFiBXmT_69RLbTxgEX_g.png) | angry_face | -1.9732 | 1.1235 | rank-biserial r | -0.1373 | 0.5472 | 1.0020 | BLUP, CV, ES |
+| [68123521](../../materials/stimuli/68123521.png) | happy_face | 1.2606 | 1.0574 | rank-biserial r | 0.0882 | 0.7059 | 0.9952 | BLUP, CV, ES |
+| [KzR2IFB3TZOI8LzfUmb0Gw](../../materials/stimuli/KzR2IFB3TZOI8LzfUmb0Gw.png) | warfare | -4.3504 | 1.0535 | rank-biserial r | -0.0833 | 0.7225 | 0.8580 | BLUP, CV, ES |
+| [dIsJdajoT4msRkkJ_zfW3w](../../materials/stimuli/dIsJdajoT4msRkkJ_zfW3w.png) | sleep_related | -0.5619 | 0.9525 | rank-biserial r | 0.0882 | 0.7059 | 0.9102 | BLUP, CV, ES |
+| [ScZovXGJRdO257M1YbYzOw](../../materials/stimuli/ScZovXGJRdO257M1YbYzOw.png) | neutral | -1.1700 | 1.2360 | rank-biserial r | -0.0686 | 0.7673 | 1.2848 | CV, ES |
+| [YMjbkdnMSqilocbDaFK_lQ](../../materials/stimuli/YMjbkdnMSqilocbDaFK_lQ.png) | neutral | -0.8795 | 1.1993 | rank-biserial r | -0.0196 | 0.9467 | 1.2554 | CV, ES |
+| [aX7_5eB-SruGeFTptfKWlw](../../materials/stimuli/aX7_5eB-SruGeFTptfKWlw.png) | neutral | -0.1690 | 1.1499 | rank-biserial r | -0.1471 | 0.5198 | 1.1261 | BLUP, CV |
+| [RriA_iA-T8CtzcT6pDhKcA](../../materials/stimuli/RriA_iA-T8CtzcT6pDhKcA.png) | neutral | -0.7807 | 1.1279 | rank-biserial r | 0.0343 | 0.8938 | 0.8764 | CV, ES |
+| [D50IOgoBSkCOAosH87negA](../../materials/stimuli/D50IOgoBSkCOAosH87negA.png) | combat_vehicles | 0.6446 | 1.1158 | rank-biserial r | -0.0392 | 0.8768 | 1.1392 | CV, ES |
+| [a5wTdTZzRBWI8S5rtGpSnw](../../materials/stimuli/a5wTdTZzRBWI8S5rtGpSnw.png) | neutral | -1.5757 | 1.1037 | rank-biserial r | 0.0490 | 0.8414 | 1.5358 | CV, ES |
+| [CLZddDIORpCOa5MK6Rsc7w](../../materials/stimuli/CLZddDIORpCOa5MK6Rsc7w.png) | warfare | -0.6577 | 1.1016 | rank-biserial r | -0.1373 | 0.5494 | 0.8891 | CV, ES |
+| [VBsOU00iTcmFmqu6o4q07A](../../materials/stimuli/VBsOU00iTcmFmqu6o4q07A.png) | combat_vehicles | -9.1758 | 1.0877 | rank-biserial r | 0.0245 | 0.9284 | 1.9443 | BLUP, CV |
+| [E0GzwqkNRt2EbWvJjA60Hw](../../materials/stimuli/E0GzwqkNRt2EbWvJjA60Hw.png) | anxiety_inducing | -1.5411 | 1.0213 | rank-biserial r | 0.0294 | 0.9118 | 1.3241 | BLUP, CV |
+| [Onhyu_ssRze6tmryDPDhcw](../../materials/stimuli/Onhyu_ssRze6tmryDPDhcw.png) | warfare | -2.1437 | 1.0111 | rank-biserial r | 0.1422 | 0.5324 | 0.7429 | BLUP, CV |
+| [aFt8UlJUS7WAxa3lTutG-g](../../materials/stimuli/aFt8UlJUS7WAxa3lTutG-g.png) | neutral | 0.1284 | 0.9847 | rank-biserial r | 0.0931 | 0.6899 | 0.9749 | BLUP, ES |
+| [68123524](../../materials/stimuli/68123524.png) | sad_face | -1.2294 | 0.9662 | rank-biserial r | 0.0833 | 0.7228 | 1.0181 | BLUP, CV |
+| [Byi3ZPboRuWBVDB9i8iTHA](../../materials/stimuli/Byi3ZPboRuWBVDB9i8iTHA.png) | angry_face | -0.8867 | 0.8967 | Cohen's d | -0.4251 | 0.2694 | 0.8869 | CV, ES |
+| [UhDwyHuQSByzKUI5ODt3BA](../../materials/stimuli/UhDwyHuQSByzKUI5ODt3BA.png) | neutral | 0.0890 | 0.8391 | rank-biserial r | 0.0882 | 0.7062 | 1.8016 | BLUP, ES |
+| [Ym_NeAeOS8GjRc7sHx7leQ](../../materials/stimuli/Ym_NeAeOS8GjRc7sHx7leQ.png) | neutral_face | 1.5378 | 0.6870 | Cohen's d | 0.3633 | 0.3438 | 0.3464 | BLUP, ES |
+| [cpneNStTRAyJlnfbtOB0Zg](../../materials/stimuli/cpneNStTRAyJlnfbtOB0Zg.png) | combat_vehicles | -2.0567 | 0.6472 | Cohen's d | -0.0896 | 0.8139 | 0.1393 | BLUP, ES |
+| [68123428](../../materials/stimuli/68123428.png) | happy_face | 1.1768 | 0.6397 | Cohen's d | 0.2625 | 0.4923 | 0.3206 | BLUP, ES |
+| [CHk-QJZ1ThGlvByAi3I_RQ](../../materials/stimuli/CHk-QJZ1ThGlvByAi3I_RQ.png) | neutral_face | 3.6397 | 0.6185 | rank-biserial r | 0.4118 | 0.0654 | 0.8475 | BLUP, ES |
+| [avk_faNVR-etdQf4CvXR0A](../../materials/stimuli/avk_faNVR-etdQf4CvXR0A.png) | neutral_face | 4.3589 | 0.4972 | Cohen's d | 0.0941 | 0.8049 | -0.0459 | BLUP, ES |
 
 ### Flags Per Category
 
