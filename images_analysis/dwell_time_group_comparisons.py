@@ -207,6 +207,10 @@ reject, p_corrected, _, _ = multipletests(results_df['p_uncorrected'], alpha=ALP
 results_df['p_BH'] = p_corrected
 results_df['Significant_BH'] = reject
 
+os.makedirs('data/output', exist_ok=True)
+results_df.to_csv('data/output/group_comparisons_per_image.csv', index=False)
+print("Exported: data/output/group_comparisons_per_image.csv")
+
 print("=== Results with BH Correction (first 20 rows) ===")
 display_cols = ['Image_ID', 'Category', 'Test', 'Statistic', 'df', 'p_uncorrected', 'p_BH',
                 'Effect_Size_Type', 'Effect_Size', 'CI_lo', 'CI_hi', 'Significant_BH']

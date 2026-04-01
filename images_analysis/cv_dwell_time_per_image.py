@@ -61,6 +61,10 @@ grouped['Group'] = grouped['if_PTSD'].map({1: 'PTSD', 0: 'No-PTSD'})
 
 cv_df = grouped[['image_id', 'Category', 'Group', 'n', 'Mean', 'SD', 'CV']].copy()
 
+os.makedirs('data/output', exist_ok=True)
+cv_df.to_csv('data/output/cv_dwell_time_per_image.csv', index=False)
+print("Exported: data/output/cv_dwell_time_per_image.csv")
+
 print(f"CV table shape: {cv_df.shape}")
 print(f"Images with zero mean (CV undefined): {cv_df['CV'].isna().sum()}")
 

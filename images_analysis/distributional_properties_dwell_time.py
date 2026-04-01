@@ -70,6 +70,10 @@ stats_df = pd.DataFrame(rows)
 stats_df['CV'] = np.where(stats_df['mean'] > 0, stats_df['SD'] / stats_df['mean'], np.nan)
 stats_df['abs_skewness'] = stats_df['skewness'].abs()
 
+os.makedirs('data/output', exist_ok=True)
+stats_df.to_csv('data/output/distributional_properties_per_image.csv', index=False)
+print("Exported: data/output/distributional_properties_per_image.csv")
+
 print(f"Stats table: {stats_df.shape[0]} images")
 print(f"Images with zero mean (CV undefined): {stats_df['CV'].isna().sum()}")
 
