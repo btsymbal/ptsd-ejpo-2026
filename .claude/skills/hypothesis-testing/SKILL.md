@@ -1,4 +1,11 @@
-# Skill: Hypothesis Testing
+---
+name: hypothesis-testing
+description: >
+  Statistical testing workflow for the PTSD eye-tracking dataset (group
+  comparisons and correlations). Use whenever the user wants to test a
+  hypothesis, run statistical analysis, or create a hypothesis notebook
+  or report.
+---
 
 Reusable workflow for running hypothesis tests (group comparisons or correlational analyses) on eye-tracking metrics from the PTSD dataset.
 
