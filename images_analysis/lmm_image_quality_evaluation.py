@@ -1,14 +1,24 @@
 # %% [markdown]
 # # LMM-Based Image Quality Evaluation
 #
-# **Goal**: Identify poorly performing images in the stimulus set by fitting a
-# Linear Mixed Model (LMM) per category, extracting image-level BLUPs (Best
-# Linear Unbiased Predictors), and combining them with previously computed
-# metrics (CV, effect sizes, distributional properties) to flag candidates
-# for removal.
+# **Goal**: Identify poorly performing images in the stimulus set by combining
+# previously computed per-image metrics (CV, effect sizes, distributional
+# properties) and flag candidates for removal. An LMM per category provides
+# image-level BLUPs (Best Linear Unbiased Predictors) as an **informational
+# diagnostic** of per-image engagement.
 #
-# **Model**: `dwell_pct ~ group + (1|participant) + (1|image)` fitted
+# **Model**: `dwell_pct ~ if_PTSD + (1 | image) + VC(participant)` fitted
 # separately for each image category.
+#
+# The BLUP captures each image's deviation from the category mean after
+# controlling for group and participant variability — it is a measure of
+# overall engagement, *not* a direct measure of PTSD-specific response.
+# We tried fitting a random slope `(1 + if_PTSD | image)` to obtain per-image
+# PTSD effects, but statsmodels' MixedLM could not reliably converge such
+# models given the competing participant variance component. BLUPs are
+# therefore retained as a diagnostic visual (dotplots) but are **not** part
+# of the flagging criteria. Flagging uses CV and effect size only, both of
+# which directly reflect group-sensitive signals.
 
 # %%
 import json
@@ -40,14 +50,18 @@ EXPECTED_SIGN = {
     'neutral': None,
     'neutral_face': 'negative',
     'sad_face': 'positive',
-    'sleep_related': None,
+    'sleep_related': 'positive',  # PTSD group expected to dwell longer due to sleep-related symptoms
     'soldiers': 'positive',
     'warfare': 'positive',
 }
 
+# Categories excluded from flagging (included in LMM/diagnostics but not flagged).
+# 'neutral' is excluded because no consistent attentional bias is expected and
+# the category is used as a baseline/filler — flagging would be uninterpretable.
+FLAGGING_EXCLUDED = {'neutral'}
+
 # Flagging thresholds
-PERCENTILE_THRESHOLD = 0.20  # bottom/top 20%
-ES_NEAR_ZERO = 0.1           # |effect size| < 0.1 considered near-zero
+CV_THRESHOLD = 1.0    # CV >= 1.0 (within-group SD exceeds the mean) → noisy measurement
 
 # %% [markdown]
 # ## 1. Load Data
@@ -101,7 +115,6 @@ for cat in categories:
         convergence_warnings = [x for x in w if 'converg' in str(x.message).lower()
                                 or 'hessian' in str(x.message).lower()]
 
-    # Store summary info
     intercept = result.fe_params['Intercept']
     group_coef = result.fe_params['if_PTSD']
     group_pval = result.pvalues['if_PTSD']
@@ -132,7 +145,7 @@ for cat in categories:
     if convergence_warnings:
         print(f"  WARNING: {convergence_warnings[0].message}")
 
-    # Extract image BLUPs
+    # Extract image engagement BLUPs (informational only — not used for flagging)
     for img_id, re in result.random_effects.items():
         blup_rows.append({
             'image_id': img_id,
@@ -270,7 +283,9 @@ for cat in categories:
 # ## 5. Visualizations
 
 # %%
-# Plot 1: BLUP Dotplot (per category)
+# Plot 1: BLUP Dotplot (per category) — informational only, not used for flagging.
+# BLUP = image random intercept from intercept-only LMM, reflecting overall engagement
+# (deviation from category mean after controlling for group and participant effects).
 for cat in categories:
     cat_data = summary[summary['category'] == cat].sort_values('BLUP').reset_index(drop=True)
     n_img = len(cat_data)
@@ -284,8 +299,8 @@ for cat in categories:
 
     ax.set_yticks(y_pos)
     ax.set_yticklabels(cat_data['image_id'].values, fontsize=7)
-    ax.set_xlabel('BLUP (image random intercept)')
-    ax.set_title(f'Image BLUPs — {cat}')
+    ax.set_xlabel('BLUP (image random intercept — engagement diagnostic)')
+    ax.set_title(f'Image BLUPs — {cat} [diagnostic only]')
     ax.grid(axis='x', alpha=0.3)
 
     fname = f'{FIG_DIR}/blup_dotplot_{cat}.png'
@@ -294,7 +309,7 @@ for cat in categories:
     print(f'Saved: {fname}')
 
 # %%
-# Plot 2: BLUP vs CV scatter (per category)
+# Plot 2: BLUP vs CV scatter (per category) — informational only.
 for cat in categories:
     cat_data = summary[summary['category'] == cat]
     n_img = len(cat_data)
@@ -307,9 +322,9 @@ for cat in categories:
                      fontsize=5, alpha=0.7, xytext=(3, 3), textcoords='offset points')
 
     ax.axvline(0, color='grey', linestyle='--', linewidth=0.8)
-    ax.set_xlabel('BLUP (image random intercept)')
+    ax.set_xlabel('BLUP (image random intercept — engagement diagnostic)')
     ax.set_ylabel('CV (PTSD group)')
-    ax.set_title(f'BLUP vs CV — {cat}')
+    ax.set_title(f'BLUP vs CV — {cat} [diagnostic only]')
     ax.grid(alpha=0.3)
 
     fname = f'{FIG_DIR}/blup_vs_cv_{cat}.png'
@@ -365,11 +380,24 @@ for cat in categories:
 # %% [markdown]
 # ## 6. Flag Poorly Performing Images
 #
-# An image is flagged if it meets **two or more** of these criteria:
+# An image is flagged if it meets **either** of these criteria:
 #
-# 1. **BLUP criterion** (direction-aware, bottom/top 20% within category)
-# 2. **CV criterion** (top 20% within PTSD group, within category)
-# 3. **Effect size criterion** (near zero or unexpected direction)
+# 1. **CV criterion** (within-PTSD-group CV >= 1.0) — within-group SD exceeds
+#    the mean, indicating a substantively noisy measurement
+# 2. **Effect size criterion** (unexpected direction) — image drives the
+#    group difference opposite to the theoretical prediction
+#
+# Each criterion independently identifies a real failure mode: an image failing
+# CV is an unreliable measurement regardless of its effect size; an image failing
+# the effect-size check fails its theoretical purpose regardless of its noise
+# level. Conjunction (AND) would require both failures to co-occur, which is
+# stricter than either problem alone warrants.
+#
+# The BLUP from the LMM is retained as an informational diagnostic (see dotplots
+# in §5) but is not used for flagging. Previous attempts to incorporate BLUPs
+# as a direction-aware flagging criterion are documented in the project history;
+# the intercept-BLUP captures overall engagement rather than PTSD-specific
+# response, and random-slope extensions did not converge reliably in statsmodels.
 
 # %%
 flag_rows = []
@@ -379,43 +407,37 @@ for cat in categories:
     n_img = len(cat_data)
     expected = EXPECTED_SIGN.get(cat)
 
-    # --- Criterion 1: BLUP ---
-    if expected == 'positive':
-        # Threat/trauma categories: low BLUP = weak stimulus
-        threshold = cat_data['BLUP'].quantile(PERCENTILE_THRESHOLD)
-        cat_data['flag_blup'] = cat_data['BLUP'] <= threshold
-    elif expected == 'negative':
-        # Positive/happy categories: high BLUP = counteracts expected avoidance
-        threshold = cat_data['BLUP'].quantile(1 - PERCENTILE_THRESHOLD)
-        cat_data['flag_blup'] = cat_data['BLUP'] >= threshold
-    else:
-        # No expectation: flag largest absolute deviation (bottom 20% of |BLUP|)
-        # Actually, for no-expectation categories, small |BLUP| means the image
-        # deviates little from the mean — could be fine. Use bottom 20% of |BLUP|.
-        abs_blups = cat_data['BLUP'].abs()
-        threshold = abs_blups.quantile(PERCENTILE_THRESHOLD)
-        cat_data['flag_blup'] = abs_blups <= threshold
+    if cat in FLAGGING_EXCLUDED:
+        cat_data['flag_cv'] = False
+        cat_data['flag_es'] = False
+        cat_data['n_flags'] = 0
+        cat_data['flagged'] = False
+        flag_rows.append(cat_data)
+        continue
 
-    # --- Criterion 2: CV in top 20% (within PTSD group) ---
-    cv_threshold = cat_data['CV_PTSD'].quantile(1 - PERCENTILE_THRESHOLD)
-    cat_data['flag_cv'] = cat_data['CV_PTSD'] >= cv_threshold
+    # --- Criterion 1: CV >= fixed threshold (within PTSD group) ---
+    # CV is scale-free (SD/mean); CV >= 1.0 means within-group SD exceeds the
+    # mean — a substantively noisy measurement regardless of category.
+    cat_data['flag_cv'] = cat_data['CV_PTSD'] >= CV_THRESHOLD
 
-    # --- Criterion 3: Effect size near zero or unexpected direction ---
+    # --- Criterion 2: Effect size in unexpected direction ---
+    # For categories with a theoretical direction, flag images whose effect
+    # size has the wrong sign. For no-expectation categories (if any remain
+    # after 'neutral' is excluded from flagging), no ES-based flag is applied.
     def check_es(row):
         es = row['Effect_Size']
         if expected == 'positive':
-            return es <= 0
+            return es < 0
         elif expected == 'negative':
-            return es >= 0
+            return es > 0
         else:
-            return abs(es) < ES_NEAR_ZERO
+            return False
     cat_data['flag_es'] = cat_data.apply(check_es, axis=1)
 
-    # --- Count flags ---
-    cat_data['n_flags'] = (cat_data['flag_blup'].astype(int)
-                           + cat_data['flag_cv'].astype(int)
+    # --- Count flags (either criterion sufficient) ---
+    cat_data['n_flags'] = (cat_data['flag_cv'].astype(int)
                            + cat_data['flag_es'].astype(int))
-    cat_data['flagged'] = cat_data['n_flags'] >= 2
+    cat_data['flagged'] = cat_data['n_flags'] >= 1
 
     flag_rows.append(cat_data)
 
@@ -432,36 +454,28 @@ print("=" * 90)
 print("IMAGE QUALITY EVALUATION — SUMMARY")
 print("=" * 90)
 print(f"\nTotal images evaluated: {n_total}")
-print(f"Images flagged (2+ criteria): {n_flagged}")
+print(f"Images flagged (either criterion): {n_flagged}")
 
 print(f"\n--- Flags per category ---\n")
 cat_flag_counts = flagged_df.groupby('category').agg(
     n_images=('image_id', 'count'),
     n_flagged=('flagged', 'sum'),
-    n_flag_blup=('flag_blup', 'sum'),
     n_flag_cv=('flag_cv', 'sum'),
     n_flag_es=('flag_es', 'sum'),
 ).astype(int)
 print(cat_flag_counts.to_string())
 
 if n_flagged > 0:
-    print(f"\n--- Flagged images (2+ criteria) ---\n")
+    print(f"\n--- Flagged images (either criterion) ---\n")
     flagged_images = flagged_df[flagged_df['flagged']].sort_values(
         ['n_flags', 'CV_PTSD'], ascending=[False, False]
     )
     for _, r in flagged_images.iterrows():
-        criteria = []
-        if r['flag_blup']:
-            criteria.append('BLUP')
-        if r['flag_cv']:
-            criteria.append('CV')
-        if r['flag_es']:
-            criteria.append('Effect Size')
         expected = EXPECTED_SIGN.get(r['category'], 'none')
         print(f"  {r['image_id']} ({r['category']}):")
-        print(f"    Criteria met: {', '.join(criteria)} ({r['n_flags']}/3)")
-        print(f"    BLUP = {r['BLUP']:.4f}, CV_PTSD = {r['CV_PTSD']:.4f}, "
-              f"ES ({r['ES_Type']}) = {r['Effect_Size']:.4f}")
+        print(f"    CV_PTSD = {r['CV_PTSD']:.4f}, "
+              f"ES ({r['ES_Type']}) = {r['Effect_Size']:.4f}, "
+              f"BLUP = {r['BLUP']:.4f}")
         print(f"    Expected direction: {expected}")
         print()
 
@@ -473,7 +487,7 @@ pct_flagged = n_flagged / n_total * 100 if n_total > 0 else 0
 print(f"\n{n_flagged}/{n_total} images ({pct_flagged:.1f}%) flagged across all categories.")
 
 if n_flagged == 0:
-    print("\nNo images meet two or more flagging criteria. The stimulus set appears")
+    print("\nNo images meet either flagging criterion. The stimulus set appears")
     print("to be performing adequately. No trimming is recommended at this time.")
 elif pct_flagged <= 10:
     print(f"\nA small proportion of images are flagged. Removing these {n_flagged} image(s)")
@@ -510,18 +524,38 @@ report_lines = [
     '3. **Group comparisons**: per-image effect sizes (Cohen\'s d for parametric tests,',
     '   rank-biserial r for non-parametric tests) comparing PTSD vs No-PTSD dwell time,',
     '   with Benjamini-Hochberg FDR correction.',
-    '4. **Linear Mixed Models (LMM)**: the central analysis, fitting',
-    '   `dwell_pct ~ if_PTSD + (1|participant) + (1|image)` separately per category',
+    '4. **Linear Mixed Models (LMM)**: fitted as an informational diagnostic only.',
+    '   Model: `dwell_pct ~ if_PTSD + (1 | image) + VC(participant)` per category',
     '   using REML estimation. Image-level BLUPs (Best Linear Unbiased Predictors)',
-    '   capture each image\'s deviation from the category mean after controlling for',
-    '   group and participant variability.',
+    '   capture each image\'s deviation from the category mean after controlling',
+    '   for group and participant variability — i.e. overall engagement, not a',
+    '   PTSD-specific response. BLUPs are reported in dotplots for interpretive',
+    '   context but are **not** used for flagging (see discussion below).',
     '',
-    'Images are flagged if they meet two or more of three direction-aware criteria:',
+    'Images are flagged if they meet **either** of two direction-aware criteria',
+    '(applied to all categories except `neutral`, which is excluded from flagging',
+    'as a baseline/filler category with no interpretable attentional bias expectation).',
+    'Each criterion independently indicates a real failure mode — unreliability or',
+    'failure of the theoretical prediction — so either alone is sufficient to flag.',
     '',
-    '- **BLUP criterion**: bottom 20% for positive-expected categories (weak stimuli)',
-    '  or top 20% for negative-expected categories (counteracting expected avoidance)',
-    '- **CV criterion**: top 20% within-PTSD-group CV (noisy measurement)',
-    '- **Effect size criterion**: near-zero (|ES| < 0.1) or unexpected-direction effect',
+    '- **CV criterion**: within-PTSD-group CV >= 1.0 (within-group SD exceeds',
+    '  the mean — a scale-free indicator of substantively noisy measurement).',
+    '- **Effect size criterion**: Cohen\'s d / rank-biserial r from the raw',
+    '  group comparison has the unexpected sign (opposite to the category\'s',
+    '  theoretical direction). Magnitude is not thresholded — any wrong-direction',
+    '  effect counts, since it indicates the image drives the group difference',
+    '  opposite to its intended purpose.',
+    '',
+    '**Note on BLUPs and flagging**: Earlier iterations used a direction-aware',
+    'BLUP criterion (bottom/top 20% within category, per `EXPECTED_SIGN`). On',
+    'reflection this conflated the image\'s overall engagement level with its',
+    'PTSD-specific response — the intercept BLUP measures only the former. A',
+    'random-slope extension `(1 + if_PTSD | image)` would give per-image PTSD',
+    'effects directly, but statsmodels\' MixedLM could not reliably converge such',
+    'models here given the competing participant variance component. The effect',
+    'size criterion (Cohen\'s d / rank-biserial r) is already a direct, model-free',
+    'test of the theoretical direction prediction, so dropping the BLUP criterion',
+    'does not lose group-sensitive signal.',
     '',
     '### Expected Directions',
     '',
@@ -537,7 +571,7 @@ EXPECTED_RATIONALE = {
     'neutral': 'no consistent pattern (paired with diverse images)',
     'neutral_face': 'hypervigilance to threat (opposite image)',
     'sad_face': 'anhedonistic subtype (opposite image)',
-    'sleep_related': 'no strong theoretical expectation',
+    'sleep_related': 'PTSD group expected to dwell longer due to sleep-related symptoms',
     'soldiers': 'hypervigilance to threat',
     'warfare': 'hypervigilance to threat',
 }
@@ -547,7 +581,7 @@ for cat in sorted(EXPECTED_SIGN.keys()):
 
 report_lines += [
     '',
-    '## LMM Results Per Category',
+    '## LMM Results Per Category (diagnostic)',
     '',
     '| Category | n_images | n_participants | Intercept | Group coef | Group p | Image var | Participant var | Residual var | Converged | Hessian warning |',
     '|----------|----------|----------------|-----------|------------|---------|-----------|-----------------|--------------|-----------|-----------------|',
@@ -627,45 +661,40 @@ report_lines += [
     '',
     '## Flagged Images',
     '',
-    f'**Total flagged (2+ criteria)**: {n_flagged}/{n_total}',
+    f'**Total flagged (either criterion)**: {n_flagged}/{n_total}',
     '',
 ]
 if n_flagged > 0:
     report_lines += [
-        '| Image ID | Category | BLUP | CV (PTSD) | ES Type | Effect Size | p (uncorr) | Skewness | Criteria Met |',
-        '|----------|----------|------|-----------|---------|-------------|------------|----------|--------------|',
+        '| Image ID | Category | BLUP | CV (PTSD) | ES Type | Effect Size | p (uncorr) | Skewness |',
+        '|----------|----------|------|-----------|---------|-------------|------------|----------|',
     ]
-    flagged_images = flagged_df[flagged_df['flagged']].sort_values(['n_flags', 'CV_PTSD'], ascending=[False, False])
+    flagged_images = flagged_df[flagged_df['flagged']].sort_values(
+        ['CV_PTSD'], ascending=[False]
+    )
     for _, r in flagged_images.iterrows():
-        criteria = []
-        if r['flag_blup']:
-            criteria.append('BLUP')
-        if r['flag_cv']:
-            criteria.append('CV')
-        if r['flag_es']:
-            criteria.append('ES')
         report_lines.append(
             f"| {r['image_id']} | {r['category']} | {r['BLUP']:.4f} | {r['CV_PTSD']:.4f} | "
             f"{r['ES_Type']} | {r['Effect_Size']:.4f} | {r['p_uncorrected']:.4f} | "
-            f"{r['skewness']:.4f} | {', '.join(criteria)} |"
+            f"{r['skewness']:.4f} |"
         )
     report_lines.append('')
 else:
-    report_lines.append('No images met two or more flagging criteria.')
+    report_lines.append('No images met both flagging criteria.')
     report_lines.append('')
 
 # Category-level summary
 report_lines += [
     '### Flags Per Category',
     '',
-    '| Category | n_images | Flagged | BLUP flags | CV flags | ES flags |',
-    '|----------|----------|---------|------------|----------|----------|',
+    '| Category | n_images | Flagged | CV flags | ES flags |',
+    '|----------|----------|---------|----------|----------|',
 ]
 for cat in categories:
     row = cat_flag_counts.loc[cat]
     report_lines.append(
         f"| {cat} | {row['n_images']} | {row['n_flagged']} | "
-        f"{row['n_flag_blup']} | {row['n_flag_cv']} | {row['n_flag_es']} |"
+        f"{row['n_flag_cv']} | {row['n_flag_es']} |"
     )
 
 report_lines += [
@@ -677,7 +706,7 @@ report_lines += [
 ]
 if n_flagged == 0:
     report_lines += [
-        'No images meet two or more flagging criteria. The stimulus set appears',
+        'No images meet either flagging criterion. The stimulus set appears',
         'to be performing adequately. No trimming is recommended at this time.',
     ]
 elif pct_flagged <= 10:
@@ -706,8 +735,8 @@ report_lines += [
     f'- Assumption diagnostics: `{FIG_DIR}/assumption_diagnostics.png`',
 ]
 for cat in categories:
-    report_lines.append(f'- BLUP dotplot ({cat}): `{FIG_DIR}/blup_dotplot_{cat}.png`')
-    report_lines.append(f'- BLUP vs CV ({cat}): `{FIG_DIR}/blup_vs_cv_{cat}.png`')
+    report_lines.append(f'- BLUP dotplot (diagnostic, {cat}): `{FIG_DIR}/blup_dotplot_{cat}.png`')
+    report_lines.append(f'- BLUP vs CV (diagnostic, {cat}): `{FIG_DIR}/blup_vs_cv_{cat}.png`')
     report_lines.append(f'- Effect size dotplot ({cat}): `{FIG_DIR}/effect_size_dotplot_{cat}.png`')
 report_lines.append('')
 
