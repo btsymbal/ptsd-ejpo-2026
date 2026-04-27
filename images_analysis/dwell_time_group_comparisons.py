@@ -281,9 +281,9 @@ print("=" * 90)
 # | happy_event       | negative      | anhedonistic subtype                                |
 # | happy_face        | negative      | anhedonistic subtype                                |
 # | neutral           | —             | no consistent pattern (paired with diverse images)  |
-# | neutral_face      | negative      | hypervigilance to threat (opposite image)            |
-# | sad_face          | positive      | anhedonistic subtype (opposite image)               |
-# | sleep_related     | —             | no strong theoretical expectation                   |
+# | neutral_face      | —             | no direct expectation (former direction was inferred from opposite threat image) |
+# | sad_face          | —             | no direct expectation (former direction was inferred from opposite happy image)  |
+# | sleep_related     | positive      | PTSD group expected to dwell longer due to sleep-related symptoms                |
 # | soldiers          | positive      | hypervigilance to threat                            |
 # | warfare           | positive      | hypervigilance to threat                            |
 
@@ -297,9 +297,9 @@ EXPECTED_SIGN = {
     'happy_event': 'negative',
     'happy_face': 'negative',
     'neutral': None,
-    'neutral_face': 'negative',
-    'sad_face': 'positive',
-    'sleep_related': None,
+    'neutral_face': None,        # was 'negative' — direction was inferred from opposite (threat) image, not from the category itself
+    'sad_face': None,            # was 'positive' — direction was inferred from opposite (happy) image, not from the category itself
+    'sleep_related': 'positive',
     'soldiers': 'positive',
     'warfare': 'positive',
 }
@@ -311,9 +311,9 @@ EXPECTED_RATIONALE = {
     'happy_event': 'anhedonistic subtype',
     'happy_face': 'anhedonistic subtype',
     'neutral': 'no consistent pattern (paired with diverse images)',
-    'neutral_face': 'hypervigilance to threat (opposite image)',
-    'sad_face': 'anhedonistic subtype (opposite image)',
-    'sleep_related': 'no strong theoretical expectation',
+    'neutral_face': 'no direct expectation (former direction was inferred from opposite threat image)',
+    'sad_face': 'no direct expectation (former direction was inferred from opposite happy image)',
+    'sleep_related': 'PTSD group expected to dwell longer due to sleep-related symptoms',
     'soldiers': 'hypervigilance to threat',
     'warfare': 'hypervigilance to threat',
 }
