@@ -21,30 +21,30 @@ images in the stimulus set. The approach combines:
    PTSD-specific response. BLUPs are reported in dotplots for interpretive
    context but are **not** used for flagging (see discussion below).
 
-Images are flagged if they meet **either** of two direction-aware criteria
-(applied to all categories except `neutral`, which is excluded from flagging
-as a baseline/filler category with no interpretable attentional bias expectation).
-Each criterion independently indicates a real failure mode — unreliability or
-failure of the theoretical prediction — so either alone is sufficient to flag.
+Images are flagged by the combined rule:
 
-- **CV criterion**: within-PTSD-group CV >= 1.0 (within-group SD exceeds
+    flagged = C1 OR C2 OR (C3 AND C4)
+
+Strong criteria (each fires alone):
+
+- **C1 — CV (within PTSD group)**: `CV_PTSD >= 1.0` (within-group SD exceeds
   the mean — a scale-free indicator of substantively noisy measurement).
-- **Effect size criterion**: Cohen's d / rank-biserial r from the raw
-  group comparison has the unexpected sign (opposite to the category's
-  theoretical direction). Magnitude is not thresholded — any wrong-direction
-  effect counts, since it indicates the image drives the group difference
-  opposite to its intended purpose.
+- **C2 — Wrong-direction effect size with confidence**: Cohen's d / rank-
+  biserial r has the unexpected sign **and** uncorrected p ≤ 0.5. The p-value
+  gate prevents wrong-direction effects from extremely uncertain tests
+  (e.g. p ≈ 0.99) from triggering a flag — those are noise, not a real
+  failure of the theoretical prediction. Categories with no directional
+  expectation (`neutral`, `neutral_face`, `sad_face`) are skipped by C2.
 
-**Note on BLUPs and flagging**: Earlier iterations used a direction-aware
-BLUP criterion (bottom/top 20% within category, per `EXPECTED_SIGN`). On
-reflection this conflated the image's overall engagement level with its
-PTSD-specific response — the intercept BLUP measures only the former. A
-random-slope extension `(1 + if_PTSD | image)` would give per-image PTSD
-effects directly, but statsmodels' MixedLM could not reliably converge such
-models here given the competing participant variance component. The effect
-size criterion (Cohen's d / rank-biserial r) is already a direct, model-free
-test of the theoretical direction prediction, so dropping the BLUP criterion
-does not lose group-sensitive signal.
+Weak criteria (must co-occur to fire):
+
+- **C3 — Pooled skewness**: `|skewness| > 1.0` across all participants.
+  Highly skewed dwell-time distributions mean nearly everyone reacts the
+  same way to the image, so the image cannot discriminate between the groups.
+- **C4 — Bottom-quintile BLUP**: image's intercept BLUP is in the bottom
+  20% of its category (low absolute engagement). The intercept BLUP captures
+  overall engagement, not PTSD-specific response, so we only count it when
+  it co-occurs with C3.
 
 ### Expected Directions
 
@@ -56,8 +56,8 @@ does not lose group-sensitive signal.
 | happy_event | negative | anhedonistic subtype |
 | happy_face | negative | anhedonistic subtype |
 | neutral | — | no consistent pattern (paired with diverse images) |
-| neutral_face | negative | hypervigilance to threat (opposite image) |
-| sad_face | positive | anhedonistic subtype (opposite image) |
+| neutral_face | — | no direct expectation (former direction was inferred from opposite threat image) |
+| sad_face | — | no direct expectation (former direction was inferred from opposite happy image) |
 | sleep_related | positive | PTSD group expected to dwell longer due to sleep-related symptoms |
 | soldiers | positive | hypervigilance to threat |
 | warfare | positive | hypervigilance to threat |
@@ -131,83 +131,58 @@ Diagnostic plots: `figures/images_analysis/lmm_image_quality/assumption_diagnost
 
 ## Flagged Images
 
-**Total flagged (either criterion)**: 49/150
+**Total flagged (combined rule)**: 22/150
 
-| Image ID | Category | BLUP | CV (PTSD) | ES Type | Effect Size | p (uncorr) | Skewness |
-|----------|----------|------|-----------|---------|-------------|------------|----------|
-| MamyfpQXRqCkhsxuPo2UxQ | sleep_related | -1.9477 | 1.2048 | rank-biserial r | -0.1520 | 0.5035 | 1.3640 |
-| fefWMtd9R8KSv7H2BTpIrw | anxiety_inducing | -2.2514 | 1.1635 | rank-biserial r | -0.2255 | 0.3178 | 0.9105 |
-| 68123391 | sad_face | -1.9638 | 1.1623 | rank-biserial r | -0.1471 | 0.5165 | 1.2632 |
-| QFVNirMFT5uK66NfTCL2cw | neutral_face | -3.1131 | 1.1595 | rank-biserial r | -0.2892 | 0.1959 | 0.6244 |
-| WMKKOlK4QrGOs3Cn2b_lZg | soldiers | -4.8399 | 1.1310 | rank-biserial r | -0.3186 | 0.1554 | 0.3388 |
-| axcFiBXmT_69RLbTxgEX_g | angry_face | -1.9732 | 1.1235 | rank-biserial r | -0.1373 | 0.5472 | 1.0020 |
-| D50IOgoBSkCOAosH87negA | combat_vehicles | 0.6446 | 1.1158 | rank-biserial r | -0.0392 | 0.8768 | 1.1392 |
-| CLZddDIORpCOa5MK6Rsc7w | warfare | -0.6577 | 1.1016 | rank-biserial r | -0.1373 | 0.5494 | 0.8891 |
-| Jk-2DYfARdOZFHZl54GTYw | neutral_face | 0.3161 | 1.0999 | rank-biserial r | -0.4412 | 0.0485 | 1.1003 |
-| E37Nm1hER9WMwQvsa2Hflw | neutral_face | -1.3823 | 1.0983 | rank-biserial r | -0.3333 | 0.1352 | 0.5664 |
-| VBsOU00iTcmFmqu6o4q07A | combat_vehicles | -9.1758 | 1.0877 | rank-biserial r | 0.0245 | 0.9284 | 1.9443 |
-| 68123521 | happy_face | 1.2606 | 1.0574 | rank-biserial r | 0.0882 | 0.7059 | 0.9952 |
-| CCkWAVY9SZyZENRWRaCbQQ | anxiety_inducing | -0.9981 | 1.0573 | rank-biserial r | 0.1814 | 0.4248 | 1.3683 |
-| KzR2IFB3TZOI8LzfUmb0Gw | warfare | -4.3504 | 1.0535 | rank-biserial r | -0.0833 | 0.7225 | 0.8580 |
-| XtWPclE2Rs6IrWpB1mbQ_g | happy_event | -2.8140 | 1.0414 | rank-biserial r | -0.0980 | 0.6732 | 0.8717 |
-| E0GzwqkNRt2EbWvJjA60Hw | anxiety_inducing | -1.5411 | 1.0213 | rank-biserial r | 0.0294 | 0.9118 | 1.3241 |
-| Dtg8yTd7QBCVthQf7oIqdg | happy_event | 0.0111 | 1.0124 | rank-biserial r | -0.3088 | 0.1680 | 0.5715 |
-| Onhyu_ssRze6tmryDPDhcw | warfare | -2.1437 | 1.0111 | rank-biserial r | 0.1422 | 0.5324 | 0.7429 |
-| 68123473 | happy_face | -1.8813 | 1.0085 | rank-biserial r | -0.0294 | 0.9118 | 1.3709 |
-| cdYWSf1LR1mOH4iXiIMfNQ | combat_vehicles | 1.0014 | 1.0026 | rank-biserial r | 0.1667 | 0.4639 | 1.1869 |
-| C2BYNvtJTjOgDpgLvVllVQ | soldiers | 0.5979 | 0.9799 | rank-biserial r | -0.0686 | 0.7729 | 0.5186 |
-| K2MSJLWFQ9SzRgId1rIUHA | neutral_face | -1.8557 | 0.9525 | rank-biserial r | 0.1765 | 0.4373 | 1.3737 |
-| YaLqQjVwQz6vQerO40WDBg | sleep_related | -3.9639 | 0.9501 | rank-biserial r | -0.2059 | 0.3619 | 0.7449 |
-| 68123537 | sad_face | -0.9135 | 0.8977 | Cohen's d | -0.2116 | 0.5792 | 0.4480 |
-| Byi3ZPboRuWBVDB9i8iTHA | angry_face | -0.8867 | 0.8967 | Cohen's d | -0.4251 | 0.2694 | 0.8869 |
-| R0NAzO_VSdqYLe6zb_H3-Q | warfare | 0.1569 | 0.8928 | Cohen's d | -0.3272 | 0.3931 | 0.4542 |
-| EOpW2Zg0Sc-2GKMkPQ2J2Q | neutral_face | -0.4977 | 0.8904 | rank-biserial r | 0.0686 | 0.7734 | 0.6348 |
-| OHKQX4gnTWeT_PiEr1dDeg | warfare | 1.6802 | 0.8633 | Cohen's d | -0.0862 | 0.8208 | 0.7891 |
-| dhTttH-yT_6WdPoz5dAEvg | happy_event | -1.8778 | 0.8365 | rank-biserial r | 0.0931 | 0.6895 | 0.6245 |
-| UpJ_d0LSQYuIKfuHLEy0PQ | anxiety_inducing | -1.3311 | 0.8299 | Cohen's d | -0.0481 | 0.8994 | 0.6655 |
-| M1gYVgk3Qf2m1xK8NsXYmw | anxiety_inducing | -0.8636 | 0.8212 | rank-biserial r | -0.0588 | 0.8074 | 0.2313 |
-| DnxOjrfTQhy9XTxVLuLkQA | soldiers | 2.0920 | 0.8201 | Cohen's d | -0.1079 | 0.7769 | 0.4894 |
-| A_-1OArYQ_adCPIKemPHdg | soldiers | 0.3955 | 0.8064 | rank-biserial r | -0.1225 | 0.5951 | 0.7257 |
-| aVGF810aT3S69s0ZSZgX2Q | neutral_face | -3.9039 | 0.7980 | rank-biserial r | 0.0343 | 0.8943 | 0.9765 |
-| 68123426 | sad_face | -0.0937 | 0.7769 | Cohen's d | -0.0785 | 0.8366 | 0.8274 |
-| DJw0-xR_TCaB-_LfnL6lig | sleep_related | -0.0238 | 0.7719 | Cohen's d | -0.1889 | 0.6204 | 0.7359 |
-| fSG5fxkDTPeS1y7Cz44blw | neutral_face | -0.4379 | 0.6952 | rank-biserial r | 0.2745 | 0.2231 | 0.7398 |
-| AV47lONxTSegnnp_qwxxYw | happy_event | -0.4340 | 0.6873 | Cohen's d | 0.2151 | 0.5730 | 0.6148 |
-| Ym_NeAeOS8GjRc7sHx7leQ | neutral_face | 1.5378 | 0.6870 | Cohen's d | 0.3633 | 0.3438 | 0.3464 |
-| S5f18yxeTJ227K9DSyWbjw | neutral_face | -0.4859 | 0.6689 | Cohen's d | 0.0229 | 0.9521 | -0.0173 |
-| b1Q664ESSTG5H25GTXaraQ | sleep_related | -0.7035 | 0.6682 | Cohen's d | -0.2545 | 0.5054 | 0.3491 |
-| cpneNStTRAyJlnfbtOB0Zg | combat_vehicles | -2.0567 | 0.6472 | Cohen's d | -0.0896 | 0.8139 | 0.1393 |
-| 68123428 | happy_face | 1.1768 | 0.6397 | Cohen's d | 0.2625 | 0.4923 | 0.3206 |
-| LT6YQ4czS9Wle5QjrZ76dQ | happy_face | -0.7932 | 0.6218 | rank-biserial r | 0.1569 | 0.4914 | 0.5421 |
-| CHk-QJZ1ThGlvByAi3I_RQ | neutral_face | 3.6397 | 0.6185 | rank-biserial r | 0.4118 | 0.0654 | 0.8475 |
-| F-zQ4ls4SyqcPxvljy9n0Q | combat_vehicles | 1.7011 | 0.6111 | Cohen's d | -0.3117 | 0.4156 | 0.5141 |
-| O_0Teij0SoWKQvRhaFqWXA | anxiety_inducing | 1.2013 | 0.5653 | Cohen's d | -0.0226 | 0.9527 | 0.2076 |
-| FogYThQ8Sn-ECl0o8aOcVg | happy_event | 1.1287 | 0.5298 | Cohen's d | 0.0387 | 0.9191 | -0.1206 |
-| avk_faNVR-etdQf4CvXR0A | neutral_face | 4.3589 | 0.4972 | Cohen's d | 0.0941 | 0.8049 | -0.0459 |
+Flag CSV: `data/simplified/image_quality_flags.csv`
+
+| Image ID | Category | Fired | CV (PTSD) | ES | p (uncorr) | Skewness | BLUP |
+|----------|----------|-------|-----------|----|------------|----------|------|
+| MamyfpQXRqCkhsxuPo2UxQ | sleep_related | C1, C3∧C4 | 1.205 | -0.152 | 0.504 | 1.364 | -1.948 |
+| fefWMtd9R8KSv7H2BTpIrw | anxiety_inducing | C1, C2 | 1.164 | -0.225 | 0.318 | 0.911 | -2.251 |
+| WMKKOlK4QrGOs3Cn2b_lZg | soldiers | C1, C2 | 1.131 | -0.319 | 0.155 | 0.339 | -4.840 |
+| axcFiBXmT_69RLbTxgEX_g | angry_face | C1, C3∧C4 | 1.123 | -0.137 | 0.547 | 1.002 | -1.973 |
+| VBsOU00iTcmFmqu6o4q07A | combat_vehicles | C1, C3∧C4 | 1.088 | 0.025 | 0.928 | 1.944 | -9.176 |
+| E0GzwqkNRt2EbWvJjA60Hw | anxiety_inducing | C1, C3∧C4 | 1.021 | 0.029 | 0.912 | 1.324 | -1.541 |
+| 68123473 | happy_face | C1, C3∧C4 | 1.008 | -0.029 | 0.912 | 1.371 | -1.881 |
+| D50IOgoBSkCOAosH87negA | combat_vehicles | C1 | 1.116 | -0.039 | 0.877 | 1.139 | 0.645 |
+| CCkWAVY9SZyZENRWRaCbQQ | anxiety_inducing | C1 | 1.057 | 0.181 | 0.425 | 1.368 | -0.998 |
+| KzR2IFB3TZOI8LzfUmb0Gw | warfare | C1 | 1.054 | -0.083 | 0.722 | 0.858 | -4.350 |
+| XtWPclE2Rs6IrWpB1mbQ_g | happy_event | C1 | 1.041 | -0.098 | 0.673 | 0.872 | -2.814 |
+| Onhyu_ssRze6tmryDPDhcw | warfare | C1 | 1.011 | 0.142 | 0.532 | 0.743 | -2.144 |
+| cdYWSf1LR1mOH4iXiIMfNQ | combat_vehicles | C1 | 1.003 | 0.167 | 0.464 | 1.187 | 1.001 |
+| YaLqQjVwQz6vQerO40WDBg | sleep_related | C2 | 0.950 | -0.206 | 0.362 | 0.745 | -3.964 |
+| CLZddDIORpCOa5MK6Rsc7w | warfare | C1 | 1.102 | -0.137 | 0.549 | 0.889 | -0.658 |
+| 68123521 | happy_face | C1 | 1.057 | 0.088 | 0.706 | 0.995 | 1.261 |
+| Dtg8yTd7QBCVthQf7oIqdg | happy_event | C1 | 1.012 | -0.309 | 0.168 | 0.571 | 0.011 |
+| Byi3ZPboRuWBVDB9i8iTHA | angry_face | C2 | 0.897 | -0.425 | 0.269 | 0.887 | -0.887 |
+| R0NAzO_VSdqYLe6zb_H3-Q | warfare | C2 | 0.893 | -0.327 | 0.393 | 0.454 | 0.157 |
+| 68123428 | happy_face | C2 | 0.640 | 0.262 | 0.492 | 0.321 | 1.177 |
+| LT6YQ4czS9Wle5QjrZ76dQ | happy_face | C2 | 0.622 | 0.157 | 0.491 | 0.542 | -0.793 |
+| F-zQ4ls4SyqcPxvljy9n0Q | combat_vehicles | C2 | 0.611 | -0.312 | 0.416 | 0.514 | 1.701 |
 
 ### Flags Per Category
 
-| Category | n_images | Flagged | CV flags | ES flags |
-|----------|----------|---------|----------|----------|
-| angry_face | 10 | 2 | 1 | 2 |
-| anxiety_inducing | 14 | 6 | 3 | 4 |
-| combat_vehicles | 8 | 5 | 3 | 3 |
-| happy_event | 9 | 5 | 2 | 3 |
-| happy_face | 11 | 4 | 2 | 3 |
-| neutral | 50 | 0 | 0 | 0 |
-| neutral_face | 13 | 11 | 3 | 8 |
-| sad_face | 8 | 3 | 1 | 3 |
-| sleep_related | 7 | 4 | 1 | 4 |
-| soldiers | 8 | 4 | 1 | 4 |
-| warfare | 12 | 5 | 3 | 4 |
+| Category | n_images | Flagged | C1 (CV) | C2 (ES) | C3 (skew) | C4 (BLUP) |
+|----------|----------|---------|---------|---------|-----------|-----------|
+| angry_face | 10 | 2 | 1 | 1 | 2 | 2 |
+| anxiety_inducing | 14 | 3 | 3 | 1 | 3 | 3 |
+| combat_vehicles | 8 | 4 | 3 | 1 | 3 | 2 |
+| happy_event | 9 | 2 | 2 | 0 | 0 | 2 |
+| happy_face | 11 | 4 | 2 | 2 | 2 | 3 |
+| neutral | 50 | 0 | 0 | 0 | 0 | 0 |
+| neutral_face | 13 | 0 | 0 | 0 | 0 | 0 |
+| sad_face | 8 | 0 | 0 | 0 | 0 | 0 |
+| sleep_related | 7 | 2 | 1 | 1 | 1 | 2 |
+| soldiers | 8 | 1 | 1 | 1 | 0 | 2 |
+| warfare | 12 | 4 | 3 | 1 | 1 | 3 |
 
 ## Summary & Recommendation
 
-49/150 images (32.7%) flagged across all categories.
+22/150 images (14.7%) flagged across all categories.
 
-A substantial proportion of images (32.7%) are flagged. This may
-indicate broader issues with the paradigm design or population variability
-rather than individual image quality. Trimming alone may not suffice.
+A moderate proportion of images are flagged. Trimming these 22 images
+is recommended if the categories have enough remaining stimuli for reliable
+measurement. Review category-level counts to assess impact.
 
 ## Figures
 
